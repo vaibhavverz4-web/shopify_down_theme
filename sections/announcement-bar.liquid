@@ -2,17 +2,7 @@
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 
 <style>
-  /* Figma reference: green bar, white text, icons pinned right */
-  .announcement-bar-section .utility-bar {
-    background-color: #1b6e3c;
-  }
-
-  .announcement-bar-section .announcement-bar__message,
-  .announcement-bar-section .announcement-bar__link,
-  .announcement-bar-section .list-social__link {
-    color: #ffffff;
-  }
-
+  /* Figma reference: typography/spacing/layout only — color comes from the section's color_scheme setting */
   .announcement-bar-section .announcement-bar__message {
     font-family: var(--font-body-family);
     font-size: 0.8125rem;

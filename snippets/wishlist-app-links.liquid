@@ -1,0 +1,10 @@
+{% if linkType == 'wishlist-drawer-link' %}
+  <a class="iwishDrawer header__icon small-hide" href="#" title="Wishlist">Wishlist <span class="iwish-counter">0</span></a>
+{% elsif linkType == 'wishlist-page-link' %}
+  <a class="iwishPage header__icon small-hide" href="{% unless routes.root_url == '/' %}{{ routes.root_url }}{% endunless %}/apps/iwish" title="Wishlist">Wishlist <span class="iwish-counter">0</span></a>
+{% elsif linkType == 'list-product' %}
+  <a class="iWishAddColl iwishcheck" href="#" data-variant="{{ product.variants.first.id }}" data-product="{{ product.id }}" data-pTitle="{{ product.title | escape }}"></a>
+{% elsif linkType == 'single-product' %}
+  <div class="iwish-app-block-product"><a class="iWishAdd st-1" href="#" data-variant="{{ product.variants.first.id }}" data-product="{{ product.id }}" data-pTitle="{{ product.title | escape }}"></a></div>
+{% elsif linkType == 'app-script' %}
+{% endif %}

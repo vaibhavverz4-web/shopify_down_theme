@@ -1,0 +1,330 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "mst_wishlist_prime_v3_app_block_list_qXa9By": {
+          "type": "shopify://apps/mst-wishlist-prime/blocks/v3-app-block-list/7f9269b0-1b45-4d0c-8479-faf04f05d8ac",
+          "settings": {
+            "multi_language": false,
+            "iwish_add_txt": "Add To Wishlist",
+            "iwish_added_txt": "Added To Wishlist",
+            "theme_btn_class": "",
+            "icon_position": "top-right",
+            "icon_style": "heart",
+            "iwish_add_icon_outline": "",
+            "iwish_added_icon_filled": "",
+            "text_font_size": 14,
+            "text_color": "#000000",
+            "text_color_hover": "",
+            "background_color": "#ffffff",
+            "z_index": 2,
+            "qv_wrapper": "",
+            "qv_button": "",
+            "qv_close_button": ""
+          }
+        },
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "judge_me_reviews_preview_badge_Ec9Rbc": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "judge_me_reviews_preview_badge_PnjREH": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "mst_wishlist_prime_v3_app_block_product_gyK6LF": {
+          "type": "shopify://apps/mst-wishlist-prime/blocks/v3-app-block-product/7f9269b0-1b45-4d0c-8479-faf04f05d8ac",
+          "settings": {
+            "multi_language": false,
+            "iwish_add_txt": "Add To Wishlist",
+            "iwish_added_txt": "Added To Wishlist",
+            "theme_btn_class": "",
+            "icon_style": "heart",
+            "iwish_add_icon_outline": "",
+            "iwish_added_icon_filled": "",
+            "text_font_size": 14,
+            "text_color": "#000000",
+            "text_color_hover": ""
+          }
+        }
+      },
+      "block_order": [
+        "mst_wishlist_prime_v3_app_block_list_qXa9By",
+        "vendor",
+        "title",
+        "judge_me_reviews_preview_badge_Ec9Rbc",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share",
+        "judge_me_reviews_preview_badge_PnjREH",
+        "mst_wishlist_prime_v3_app_block_product_gyK6LF"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "17865031324580f9cf": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_4nBjCb": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_4nBjCb"
+      ],
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    },
+    "product_tabs_M7BPVr": {
+      "type": "product-tabs",
+      "blocks": {
+        "tab_zxBKtd": {
+          "type": "tab",
+          "settings": {
+            "label": "Description",
+            "use_description": true,
+            "content": ""
+          }
+        },
+        "tab_9j7478": {
+          "type": "tab",
+          "settings": {
+            "label": "Benefits",
+            "use_description": false,
+            "content": "{{ product.metafields.custom.tab_benefits | metafield_tag }}",
+            "image": "{{ product.metafields.custom.tab_benefits_image.value }}"
+          }
+        },
+        "tab_LmDNyr": {
+          "type": "tab",
+          "settings": {
+            "label": "How to Apply",
+            "use_description": false,
+            "content": ""
+          }
+        },
+        "tab_kxkPHG": {
+          "type": "tab",
+          "settings": {
+            "label": "Ingredients",
+            "use_description": false,
+            "content": ""
+          }
+        }
+      },
+      "block_order": [
+        "tab_zxBKtd",
+        "tab_9j7478",
+        "tab_LmDNyr",
+        "tab_kxkPHG"
+      ],
+      "name": "Product tabs",
+      "settings": {
+        "nav_alignment": "center",
+        "nav_gap": 64,
+        "nav_spacing": 56,
+        "nav_font_size": 13,
+        "nav_font_weight": "600",
+        "nav_letter_spacing": 10,
+        "nav_uppercase": "uppercase",
+        "body_font_size": 15,
+        "body_line_height": 1.8,
+        "heading_font_size": 18,
+        "text_column_width": 55,
+        "column_gap": 56,
+        "image_radius": 0,
+        "color_scheme": "",
+        "padding_top": 64,
+        "padding_bottom": 64,
+        "aria_label": "Product information"
+      }
+    },
+    "image_with_text_wy4fwP": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_8QenLj": {
+          "type": "heading",
+          "settings": {
+            "heading": "{{ product.metafields.custom.banner_latest.value.heading.value }}",
+            "heading_size": "h1"
+          }
+        },
+        "text_cdywCK": {
+          "type": "text",
+          "settings": {
+            "text": "<p>{{ product.metafields.custom.banner_latest.value.description | metafield_tag }}</p>",
+            "text_style": "body"
+          }
+        },
+        "button_QfipFV": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_8QenLj",
+        "text_cdywCK",
+        "button_QfipFV"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "{{ product.metafields.custom.banner_latest.value.image.value }}",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "multicolumn_CfyCdE": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_dAE7yg": {
+          "type": "column",
+          "repeater": "{{ product.metafields.custom.multiple_colum_set.value }}",
+          "settings": {
+            "image": "{{ block.repeater.image.value }}",
+            "title": "{{ block.repeater.title.value }}",
+            "text": "<p>{{ block.repeater.text | metafield_tag }}</p>",
+            "link_label": "{{ block.repeater.link_label.value }}",
+            "link": "{{ block.repeater.link.value }}"
+          }
+        }
+      },
+      "block_order": [
+        "column_dAE7yg"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "title": "Multicolumn",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "button_label": "Button label",
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "17865031324580f9cf",
+    "related-products",
+    "product_tabs_M7BPVr",
+    "image_with_text_wy4fwP",
+    "multicolumn_CfyCdE"
+  ]
+}

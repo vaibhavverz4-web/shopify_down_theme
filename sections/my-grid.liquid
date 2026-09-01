@@ -1,0 +1,54 @@
+
+
+<div class="page-width">
+
+    <div class="my-grid">
+
+            {% for product in collections.all.products limit: 6 %}
+                <div class="my-card {% if forloop.first %}is-first{% endif %}">
+                    <span class="num">{{ forloop.index }}</span>
+                    <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title }}">
+                    <h3>{{ product.title | truncate: 30 }}</h3>
+                    <p>{{ product.price | money }}</p>
+                    {% if product.compare_at_price > product.price %}
+                    <span class="sale">SALE</span>
+                    {% endif %}
+                    <small>{{ product.vendor | default: "No vendor" | upcase }}</small>
+                </div>
+
+            {% else %}
+            <p>કોઈ products નથી.</p>
+            {% endfor %}
+
+    </div>
+    
+   </div>    
+
+
+<style>
+    .my-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .my-card img { width: 100%; }
+</style>
+
+
+
+{% schema %}
+
+    {
+        "name": "My Grid",
+
+        "settings": [
+            { "type": "text", "id": "heading", "label": "Heading", "default": "Featured" },
+            { "type": "range", "id": "count", "label": "Products", "min": 2, "max": 12, "step": 1, "default": 6 },
+            { "type": "collection", "id": "coll", "label": "Collection" }
+        ],
+        
+         "presets": [
+            {
+                "name": "My Grid" 
+            }
+        ]
+
+    }
+
+{% endschema %}

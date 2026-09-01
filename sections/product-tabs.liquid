@@ -1,0 +1,507 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pt-nav-size: {{ section.settings.nav_font_size }}px;
+    --pt-body-size: {{ section.settings.body_font_size }}px;
+    --pt-heading-size: {{ section.settings.heading_font_size }}px;
+    --pt-body-line: {{ section.settings.body_line_height }};
+    --pt-letter: {{ section.settings.nav_letter_spacing | divided_by: 100.0 }}em;
+    --pt-gap: {{ section.settings.column_gap }}px;
+    --pt-radius: {{ section.settings.image_radius }}px;
+  }
+
+  .pt-wrap {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .pt-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: {{ section.settings.nav_alignment }};
+    gap: clamp(1.5rem, 4vw, {{ section.settings.nav_gap }}px);
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.15);
+    margin-bottom: {{ section.settings.nav_spacing }}px;
+  }
+
+  .pt-nav__btn {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    padding: 0 0 1.2rem;
+    margin-bottom: -1px;
+    cursor: pointer;
+    color: rgba(var(--color-foreground), 0.6);
+    font-family: var(--font-heading-family);
+    font-size: var(--pt-nav-size);
+    font-weight: {{ section.settings.nav_font_weight }};
+    letter-spacing: var(--pt-letter);
+    text-transform: {{ section.settings.nav_uppercase }};
+    transition: color .25s ease, border-color .25s ease;
+  }
+
+  .pt-nav__btn:hover { color: rgb(var(--color-foreground)); }
+
+  .pt-nav__btn[aria-selected='true'] {
+    color: rgb(var(--color-foreground));
+    border-bottom-color: rgb(var(--color-foreground));
+  }
+
+  .pt-nav__btn:focus-visible {
+    outline: 2px solid rgb(var(--color-foreground));
+    outline-offset: 4px;
+  }
+
+  .pt-panel { display: none; }
+  .pt-panel.is-active { display: block; }
+
+  .pt-panel__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--pt-gap);
+    align-items: start;
+  }
+
+  @media screen and (min-width: 750px) {
+    .pt-panel__inner.has-image {
+      grid-template-columns: {{ section.settings.text_column_width }}fr {{ 100 | minus: section.settings.text_column_width }}fr;
+    }
+  }
+
+  .pt-content {
+    font-size: var(--pt-body-size);
+    line-height: var(--pt-body-line);
+    color: rgb(var(--color-foreground));
+  }
+
+  .pt-content > * + * { margin-top: 1.4em; }
+  .pt-content p { margin: 0; }
+  .pt-content strong { font-weight: 600; }
+
+  .pt-content h1,
+  .pt-content h2,
+  .pt-content h3,
+  .pt-content h4 {
+    font-size: var(--pt-heading-size);
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .pt-content ul,
+  .pt-content ol { margin: 0; padding-left: 1.4em; }
+  .pt-content li + li { margin-top: .5em; }
+
+  .pt-content a {
+    color: currentColor;
+    text-underline-offset: .2em;
+  }
+
+  .pt-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--pt-radius);
+  }
+
+  .pt-empty {
+    color: rgba(var(--color-foreground), 0.5);
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 749px) {
+    .pt-nav {
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .pt-nav::-webkit-scrollbar { display: none; }
+    .pt-nav__btn { white-space: nowrap; }
+    .pt-panel__inner { gap: 2rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pt-nav__btn { transition: none; }
+  }
+{% endstyle %}
+
+{%- liquid
+  assign visible = ''
+
+  for block in section.blocks
+    assign has_content = false
+
+    if block.settings.use_description and product.description != blank
+      assign has_content = true
+    elsif block.settings.content != blank
+      assign has_content = true
+    endif
+
+    if has_content or request.design_mode
+      assign visible = visible | append: block.id | append: ','
+    endif
+  endfor
+
+  assign visible_ids = visible | split: ','
+-%}
+
+{%- if visible_ids.size > 0 -%}
+  <div class="pt-wrap color-{{ section.settings.color_scheme }} gradient">
+    <div class="page-width">
+
+      <div class="pt-nav" role="tablist" aria-label="{{ section.settings.aria_label | escape }}">
+        {%- assign i = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- unless visible contains block.id -%}
+            {%- continue -%}
+          {%- endunless -%}
+          <button
+            class="pt-nav__btn"
+            id="pt-tab-{{ section.id }}-{{ block.id }}"
+            role="tab"
+            type="button"
+            aria-selected="{% if i == 0 %}true{% else %}false{% endif %}"
+            aria-controls="pt-panel-{{ section.id }}-{{ block.id }}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.label | default: 'Tab' }}
+          </button>
+          {%- assign i = i | plus: 1 -%}
+        {%- endfor -%}
+      </div>
+
+      {%- assign i = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- unless visible contains block.id -%}
+          {%- continue -%}
+        {%- endunless -%}
+
+        {%- liquid
+          if block.settings.use_description
+            assign body = product.description
+          else
+            assign body = block.settings.content
+          endif
+
+          assign img = block.settings.image
+        -%}
+
+        <div
+          class="pt-panel{% if i == 0 %} is-active{% endif %}"
+          id="pt-panel-{{ section.id }}-{{ block.id }}"
+          role="tabpanel"
+          aria-labelledby="pt-tab-{{ section.id }}-{{ block.id }}"
+        >
+          <div class="pt-panel__inner{% if img != blank %} has-image{% endif %}">
+            <div class="pt-content rte">
+              {%- if body != blank -%}
+                {{ body }}
+              {%- elsif request.design_mode -%}
+                <p class="pt-empty">
+                  Aa tab khali che. Content field ne metafield sathe connect karo,
+                  ke aa tab remove karo.
+                </p>
+              {%- endif -%}
+            </div>
+
+            {%- if img != blank -%}
+              <div class="pt-media">
+                {{
+                  img
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(min-width: 750px) 40vw, 100vw',
+                    widths: '400, 600, 800, 1000, 1200'
+                }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+        {%- assign i = i | plus: 1 -%}
+      {%- endfor -%}
+
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+
+      var tabs = root.querySelectorAll('.pt-nav__btn');
+      var panels = root.querySelectorAll('.pt-panel');
+
+      function activate(index) {
+        tabs.forEach(function (t, i) {
+          t.setAttribute('aria-selected', i === index ? 'true' : 'false');
+        });
+        panels.forEach(function (p, i) {
+          p.classList.toggle('is-active', i === index);
+        });
+      }
+
+      tabs.forEach(function (tab, index) {
+        tab.addEventListener('click', function () {
+          activate(index);
+        });
+
+        tab.addEventListener('keydown', function (e) {
+          var next = null;
+          if (e.key === 'ArrowRight') next = (index + 1) % tabs.length;
+          if (e.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+          if (next === null) return;
+          e.preventDefault();
+          activate(next);
+          tabs[next].focus();
+        });
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product tabs",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tab label",
+          "default": "Tab"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_description",
+          "label": "Use product description",
+          "info": "ON karo to niche nu Content ignore thashe.",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "info": "Metafield sathe connect karva mate label ni baju na database icon pr click karo."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tab bar"
+    },
+    {
+      "type": "select",
+      "id": "nav_alignment",
+      "label": "Tab alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "space-between", "label": "Justified" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "nav_gap",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between tabs",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "nav_spacing",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Space below tab bar",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Tab label size",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "nav_font_weight",
+      "label": "Tab label weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "nav_letter_spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "label": "Tab label letter spacing",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "nav_uppercase",
+      "label": "Tab label case",
+      "options": [
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "none", "label": "As typed" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "body_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Body text size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "body_line_height",
+      "min": 1.2,
+      "max": 2.2,
+      "step": 0.1,
+      "label": "Body line height",
+      "default": 1.8
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size inside tab",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "text_column_width",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "label": "Text column width",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between text and image",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Image corner radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Tab list screen reader label",
+      "default": "Product information"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product tabs",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": { "label": "Description", "use_description": true }
+        },
+        { "type": "tab", "settings": { "label": "Benefits" } },
+        { "type": "tab", "settings": { "label": "How to Apply" } },
+        { "type": "tab", "settings": { "label": "Ingredients" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

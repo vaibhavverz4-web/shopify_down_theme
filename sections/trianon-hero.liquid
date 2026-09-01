@@ -1,0 +1,631 @@
+{%- comment -%}
+  Trianon Hero — Dawn 16.0.0
+  Path: sections/trianon-hero.liquid
+
+  Static CSS lives in assets/custom.css
+  JS lives in assets/custom.js
+  Only per-section variables are emitted below.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+
+  assign subheading_block = section.blocks | where: 'type', 'subheading' | first
+  assign heading_block = section.blocks | where: 'type', 'heading' | first
+  assign text_block = section.blocks | where: 'type', 'text' | first
+  assign rating_block = section.blocks | where: 'type', 'rating' | first
+  assign button_blocks = section.blocks | where: 'type', 'button'
+  assign usp_blocks = section.blocks | where: 'type', 'usp'
+-%}
+
+{%- style -%}
+  #Thero-{{ uid }} {
+    --thero-min-height: {{ s.height_mobile }}px;
+    --thero-content-max: 100%;
+    --thero-fade: {{ s.fade_strength | divided_by: 100.0 }};
+    --thero-focal: {{ s.focal_point | replace: '-', ' ' }};
+    --thero-bg: var(--color-background);
+    --thero-heading: var(--color-heading);
+    --thero-subheading: var(--color-subheading);
+    --thero-description: var(--color-description);
+    --thero-accent: var(--color-subheading);
+    --thero-star: var(--color-star);
+    --thero-btn-bg: var(--color-button);
+    --thero-btn-text: var(--color-button-text);
+    --thero-btn-bg-hover: var(--color-button-hover);
+    --thero-btn-text-hover: var(--color-button-text-hover);
+    --thero-link: var(--color-link-custom);
+    --thero-link-hover: var(--color-link-hover);
+
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #Thero-{{ uid }} {
+      --thero-min-height: {{ s.height }}px;
+      --thero-content-max: {{ s.content_width }}px;
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="Thero-{{ uid }}"
+  class="thero color-{{ s.color_scheme }} gradient thero--align-{{ s.text_align }} thero--valign-{{ s.vertical_align }}{% if s.show_fade %} thero--faded{% endif %}{% if s.image_mobile != blank %} thero--has-mobile-image{% endif %}"
+  data-thero
+  {% if s.animate %}data-thero-animate{% endif %}
+>
+  {%- if s.image != blank or s.image_mobile != blank -%}
+    <div class="thero__media">
+      {%- if s.image != blank -%}
+        <img
+          src="{{ s.image | image_url: width: 1500 }}"
+          srcset="
+            {%- if s.image.width >= 750 -%}{{ s.image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if s.image.width >= 1100 -%}{{ s.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {%- if s.image.width >= 1500 -%}{{ s.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if s.image.width >= 1780 -%}{{ s.image | image_url: width: 1780 }} 1780w,{%- endif -%}
+            {%- if s.image.width >= 2000 -%}{{ s.image | image_url: width: 2000 }} 2000w,{%- endif -%}
+            {{ s.image | image_url }} {{ s.image.width }}w
+          "
+          sizes="100vw"
+          width="{{ s.image.width }}"
+          height="{{ s.image.height }}"
+          alt="{{ s.image.alt | escape }}"
+          class="thero__image thero__image--desktop"
+          fetchpriority="high"
+        >
+      {%- endif -%}
+
+      {%- if s.image_mobile != blank -%}
+        <img
+          src="{{ s.image_mobile | image_url: width: 1100 }}"
+          srcset="
+            {%- if s.image_mobile.width >= 550 -%}{{ s.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
+            {%- if s.image_mobile.width >= 750 -%}{{ s.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if s.image_mobile.width >= 1100 -%}{{ s.image_mobile | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {{ s.image_mobile | image_url }} {{ s.image_mobile.width }}w
+          "
+          sizes="100vw"
+          width="{{ s.image_mobile.width }}"
+          height="{{ s.image_mobile.height }}"
+          alt="{{ s.image_mobile.alt | escape }}"
+          class="thero__image thero__image--mobile"
+          fetchpriority="high"
+        >
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="thero__inner page-width">
+    <div class="thero__content">
+      {%- if subheading_block -%}
+        <p class="thero__subheading" data-thero-item {{ subheading_block.shopify_attributes }}>
+          {{ subheading_block.settings.text | escape }}
+        </p>
+      {%- endif -%}
+
+      {%- if heading_block -%}
+        <h2
+          class="thero__heading {{ heading_block.settings.heading_tag_style }}"
+          data-thero-item
+          {{ heading_block.shopify_attributes }}
+        >
+          {{ heading_block.settings.text | escape }}
+        </h2>
+      {%- endif -%}
+
+      {%- if text_block -%}
+        <div class="thero__text rte" data-thero-item {{ text_block.shopify_attributes }}>
+          {{ text_block.settings.text }}
+        </div>
+      {%- endif -%}
+
+      {%- if rating_block -%}
+        {%- assign filled = rating_block.settings.stars | floor -%}
+        <div class="thero__rating" data-thero-item {{ rating_block.shopify_attributes }}>
+          <span
+            class="thero__stars"
+            role="img"
+            aria-label="{{ rating_block.settings.stars }} out of 5 stars"
+          >
+            {%- for i in (1..5) -%}
+              <svg
+                class="thero__star{% if i > filled %} thero__star--empty{% endif %}"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.8 4.7 17.6l1-5.8L1.5 7.7l5.9-.9L10 1.5z"/>
+              </svg>
+            {%- endfor -%}
+          </span>
+          {%- if rating_block.settings.label != blank -%}
+            <span class="thero__rating-label">{{ rating_block.settings.label | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if button_blocks.size > 0 -%}
+        <div class="thero__buttons" data-thero-item>
+          {%- for block in button_blocks -%}
+            {%- if block.settings.label != blank -%}
+              <a
+                {% if block.settings.link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+                class="thero__button{% if block.settings.style_secondary %} thero__button--secondary{% endif %}"
+                {{ block.shopify_attributes }}
+              >
+                <span>{{ block.settings.label | escape }}</span>
+                {%- if block.settings.show_arrow -%}
+                  <svg class="thero__button-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path
+                      d="M1 8h13M9 3l5 5-5 5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                {%- endif -%}
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if usp_blocks.size > 0 -%}
+        <ul class="thero__usps list-unstyled" role="list" data-thero-item>
+          {%- for block in usp_blocks -%}
+            <li class="thero__usp" {{ block.shopify_attributes }}>
+              <span class="thero__usp-icon">
+                {%- if block.settings.icon_image != blank -%}
+                  <img
+                    src="{{ block.settings.icon_image | image_url: width: 48 }}"
+                    width="24"
+                    height="24"
+                    alt=""
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  {%- case block.settings.icon -%}
+                    {%- when 'leaf' -%}
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M17 3c0 8-4.5 12-9 12a5 5 0 01-5-5c0-4 4-7 14-7zM3 17c2-4 5-6 9-7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- when 'truck' -%}
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M1 5h11v9H1zM12 8h4l3 3v3h-7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5" cy="15.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="15" cy="15.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                    {%- when 'refresh' -%}
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M18 10a8 8 0 11-2.3-5.6M18 2v5h-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- when 'shield' -%}
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.5l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9v-5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- when 'heart' -%}
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 17S2.5 12.5 2.5 7.5A4 4 0 0110 5a4 4 0 017.5 2.5C17.5 12.5 10 17 10 17z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    {%- else -%}
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {%- endcase -%}
+                {%- endif -%}
+              </span>
+              <span class="thero__usp-text">{{ block.settings.text | escape }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trianon Hero",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to the desktop image."
+    },
+    {
+      "type": "select",
+      "id": "focal_point",
+      "label": "Focal point",
+      "info": "Which part of the photo stays in frame when it crops.",
+      "options": [
+        {
+          "value": "left-top",
+          "label": "Top left"
+        },
+        {
+          "value": "center-top",
+          "label": "Top center"
+        },
+        {
+          "value": "right-top",
+          "label": "Top right"
+        },
+        {
+          "value": "left-center",
+          "label": "Middle left"
+        },
+        {
+          "value": "center-center",
+          "label": "Middle center"
+        },
+        {
+          "value": "right-center",
+          "label": "Middle right"
+        },
+        {
+          "value": "left-bottom",
+          "label": "Bottom left"
+        },
+        {
+          "value": "center-bottom",
+          "label": "Bottom center"
+        },
+        {
+          "value": "right-bottom",
+          "label": "Bottom right"
+        }
+      ],
+      "default": "right-center"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_fade",
+      "label": "Fade image behind text",
+      "default": true,
+      "info": "Keeps the heading readable over a busy photo. Uses the scheme background colour."
+    },
+    {
+      "type": "range",
+      "id": "fade_strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Fade strength",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 790
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 300,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile height",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "label": "Text column width",
+      "default": 620
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "vertical_align",
+      "label": "Vertical position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "checkbox",
+      "id": "animate",
+      "label": "Fade content in on load",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subheading",
+      "name": "Subheading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Subheading",
+          "default": "Perfect for you"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Heading",
+          "default": "We Make People Healthy and Well."
+        },
+        {
+          "type": "select",
+          "id": "heading_tag_style",
+          "label": "Heading style",
+          "options": [
+            {
+              "value": "h0",
+              "label": "Extra large"
+            },
+            {
+              "value": "h1",
+              "label": "Large"
+            },
+            {
+              "value": "h2",
+              "label": "Medium"
+            }
+          ],
+          "default": "h1"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Paragraph",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>We are a world-class, highly respected multinational company helping everyone achieve holistic health and wellness.</p>"
+        }
+      ]
+    },
+    {
+      "type": "rating",
+      "name": "Rating",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Stars filled",
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "4.8/5 from 2,300+ reviews"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "style_secondary",
+          "label": "Use outline style",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "Show arrow",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "usp",
+      "name": "USP item",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "truck",
+              "label": "Delivery truck"
+            },
+            {
+              "value": "refresh",
+              "label": "Subscribe"
+            },
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "heart",
+              "label": "Heart"
+            },
+            {
+              "value": "check",
+              "label": "Check"
+            }
+          ],
+          "default": "leaf"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Custom icon",
+          "info": "Overrides the icon above."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "100% plant-based"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trianon Hero",
+      "blocks": [
+        {
+          "type": "subheading"
+        },
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "rating"
+        },
+        {
+          "type": "button"
+        },
+        {
+          "type": "usp",
+          "settings": {
+            "icon": "leaf",
+            "text": "100% plant-based"
+          }
+        },
+        {
+          "type": "usp",
+          "settings": {
+            "icon": "truck",
+            "text": "Next-day delivery"
+          }
+        },
+        {
+          "type": "usp",
+          "settings": {
+            "icon": "refresh",
+            "text": "Subscribe & save"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

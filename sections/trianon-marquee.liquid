@@ -1,0 +1,359 @@
+
+
+
+{%- comment -%}
+  Trianon Marquee — Dawn 16.0.0
+  Path: sections/trianon-marquee.liquid
+
+  Static CSS lives in assets/custom.css
+  Colours come entirely from the selected colour scheme.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+
+  assign repeats = 8
+  if section.blocks.size > 4
+    assign repeats = 4
+  endif
+-%}
+
+{%- style -%}
+  #Tmarquee-{{ uid }} {
+    --tmq-copies: {{ repeats }};
+    --tmq-speed: {{ s.speed }}s;
+    --tmq-gap: {{ s.gap }}px;
+    --tmq-font-size: {{ s.font_size }}px;
+    --tmq-font-weight: {{ s.font_weight }};
+    --tmq-sep-width: {{ s.separator_width }}px;
+    --tmq-sep-height: {{ s.separator_height }}%;
+    --tmq-sep-opacity: {{ s.separator_opacity | divided_by: 100.0 }};
+    --tmq-icon-size: {{ s.icon_size }}px;
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #Tmarquee-{{ uid }} {
+      --tmq-gap: {{ s.gap_desktop }}px;
+      --tmq-font-size: {{ s.font_size_desktop }}px;
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div
+    id="Tmarquee-{{ uid }}"
+    class="tmarquee color-{{ s.color_scheme }} gradient tmarquee--{{ s.direction }}{% if s.uppercase %} tmarquee--uppercase{% endif %}{% if s.pause_on_hover %} tmarquee--pausable{% endif %}{% unless s.show_separator %} tmarquee--no-separator{% endunless %}"
+  >
+    <div class="tmarquee__track" role="marquee" aria-label="{{ s.aria_label | escape }}">
+      {%- for i in (1..repeats) -%}
+        <ul
+          class="tmarquee__list list-unstyled"
+          role="list"
+          {% unless forloop.first %}
+            aria-hidden="true"
+          {% endunless %}
+        >
+          {%- for block in section.blocks -%}
+            <li class="tmarquee__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon != 'none' or block.settings.icon_image != blank -%}
+                <span class="tmarquee__icon">
+                  {%- if block.settings.icon_image != blank -%}
+                    <img
+                      src="{{ block.settings.icon_image | image_url: width: 48 }}"
+                      width="24"
+                      height="24"
+                      alt=""
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    {%- case block.settings.icon -%}
+                      {%- when 'truck' -%}
+                        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M1 5h11v9H1zM12 8h4l3 3v3h-7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5" cy="15.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="15" cy="15.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                      {%- when 'leaf' -%}
+                        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M17 3c0 8-4.5 12-9 12a5 5 0 01-5-5c0-4 4-7 14-7zM3 17c2-4 5-6 9-7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {%- when 'star' -%}
+                        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.8 4.7 17.6l1-5.8L1.5 7.7l5.9-.9L10 1.5z" fill="currentColor"/></svg>
+                      {%- when 'shield' -%}
+                        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.5l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9v-5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {%- when 'heart' -%}
+                        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 17S2.5 12.5 2.5 7.5A4 4 0 0110 5a4 4 0 017.5 2.5C17.5 12.5 10 17 10 17z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                      {%- when 'refresh' -%}
+                        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M18 10a8 8 0 11-2.3-5.6M18 2v5h-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {%- when 'check' -%}
+                        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- endcase -%}
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+
+              {%- if block.settings.link != blank -%}
+                <a class="tmarquee__text" href="{{ block.settings.link }}">
+                  {{- block.settings.text | escape -}}
+                </a>
+              {%- else -%}
+                <span class="tmarquee__text">{{ block.settings.text | escape }}</span>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Trianon Marquee",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "label": "Time for one full loop",
+      "info": "Higher is slower.",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "options": [
+        { "value": "left", "label": "Right to left" },
+        { "value": "right", "label": "Left to right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size, mobile",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "font_size_desktop",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size, desktop",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between items, mobile",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "gap_desktop",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between items, desktop",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Separator"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show separator line",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "label": "Line thickness",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "separator_height",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "separator_opacity",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Line opacity",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Screen reader label",
+      "default": "Store highlights"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 12
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free next day delivery"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "truck", "label": "Delivery truck" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "star", "label": "Star" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "refresh", "label": "Subscribe" },
+            { "value": "check", "label": "Check" }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Custom icon",
+          "info": "Overrides the icon above."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trianon Marquee",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Free next day delivery" } },
+        { "type": "item", "settings": { "text": "100% organic produce" } },
+        { "type": "item", "settings": { "text": "4.9 stars on trustpilot" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

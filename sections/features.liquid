@@ -1,0 +1,43 @@
+<div class="features">
+  <h2>{{ section.settings.title }}</h2>
+
+  <div class="features__grid">
+    {% for block in section.blocks %}
+      <div class="feature" {{ block.shopify_attributes }}>
+        {% if block.settings.icon %}
+          {{ block.settings.icon | image_url: width: 120 | image_tag: alt: block.settings.title }}
+        {% endif %}
+        <h3>{{ block.settings.title }}</h3>
+        <div>{{ block.settings.text }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Features",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Section title", "default": "Why us" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Free shipping" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features",
+      "blocks": [ { "type": "feature" }, { "type": "feature" }, { "type": "feature" } ]
+    }
+  ]
+}
+{% endschema %}

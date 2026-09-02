@@ -268,7 +268,7 @@
           "settings": {
             "image": "shopify://shop_images/08befabddec3b4ef8ae0f670537a1eebbd3e5781.jpg",
             "heading": "Up to 15% off On All Women's Medicine",
-            "heading_link": "#"
+            "heading_link": "shopify://products/the-3p-fulfilled-snowboard"
           }
         },
         "promo_card_LyWF9p": {
@@ -276,7 +276,7 @@
           "settings": {
             "image": "shopify://shop_images/695c334b500b1ff0ee0dfa68a20d1b0a0af77554.jpg",
             "heading": "Up to 30% off Adult Power Drink",
-            "heading_link": ""
+            "heading_link": "shopify://products/the-3p-fulfilled-snowboard"
           }
         }
       },

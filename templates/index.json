@@ -259,6 +259,41 @@
         "padding_top": 60,
         "padding_bottom": 60
       }
+    },
+    "promo_banner_cards_fQzGTg": {
+      "type": "promo-banner-cards",
+      "blocks": {
+        "promo_card_bEd6na": {
+          "type": "promo_card",
+          "settings": {
+            "image": "shopify://shop_images/08befabddec3b4ef8ae0f670537a1eebbd3e5781.jpg",
+            "heading": "Up to 15% off On All Women's Medicine",
+            "heading_link": ""
+          }
+        },
+        "promo_card_LyWF9p": {
+          "type": "promo_card",
+          "settings": {
+            "image": "shopify://shop_images/695c334b500b1ff0ee0dfa68a20d1b0a0af77554.jpg",
+            "heading": "Up to 30% off Adult Power Drink",
+            "heading_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "promo_card_bEd6na",
+        "promo_card_LyWF9p"
+      ],
+      "name": "Promo Banner Cards",
+      "settings": {
+        "color_scheme": "",
+        "text_alignment": "left",
+        "overlay_opacity": 10,
+        "border_radius": 12,
+        "card_gap": 8,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
   "order": [
@@ -267,6 +302,7 @@
     "featured_collection_LFsHqe",
     "cta_banner_agTYdA",
     "glass_image_text_paK6Y7",
-    "testimonial_scroll_MFN7yt"
+    "testimonial_scroll_MFN7yt",
+    "promo_banner_cards_fQzGTg"
   ]
 }

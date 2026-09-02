@@ -1,0 +1,260 @@
+{%- comment -%}
+  Glass Image + Text — new custom section
+  Path: sections/glass-image-text.liquid
+
+  Full-width section: a blurred, brightened copy of the chosen image fills
+  the background ("frosted glass" look), while a centered two-column
+  layout shows the same image sharp on one side and text on the other.
+  Static CSS lives in assets/custom.css (class prefix: glass-feature__).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign fallback_image = s.image | default: s.image_mobile
+  assign overlay_alpha = s.overlay_opacity | divided_by: 100.0
+-%}
+
+{%- style -%}
+  #GlassFeature-{{ uid }} {
+    --glass-feature-blur: {{ s.background_blur }}px;
+    --glass-feature-overlay: rgba(var(--color-background), {{ overlay_alpha }});
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #GlassFeature-{{ uid }} {
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="GlassFeature-{{ uid }}"
+  class="glass-feature color-{{ s.color_scheme }} gradient glass-feature--content-{{ s.content_alignment }}"
+>
+  {%- if fallback_image != blank -%}
+    <div class="glass-feature__backdrop" aria-hidden="true">
+      <picture class="glass-feature__backdrop-picture">
+        {%- if s.image_mobile != blank -%}
+          <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 800 }}">
+        {%- endif -%}
+        <img
+          src="{{ fallback_image | image_url: width: 1600 }}"
+          alt=""
+          width="{{ fallback_image.width }}"
+          height="{{ fallback_image.height }}"
+          class="glass-feature__backdrop-image"
+          loading="lazy"
+        >
+      </picture>
+      <div class="glass-feature__backdrop-overlay"></div>
+    </div>
+  {%- endif -%}
+
+  <div class="glass-feature__inner page-width">
+    <div class="glass-feature__grid glass-feature--image-{{ s.image_position }}">
+      <div class="glass-feature__media">
+        {%- if fallback_image != blank -%}
+          <picture>
+            {%- if s.image_mobile != blank -%}
+              <source
+                media="(max-width: 749px)"
+                srcset="
+                  {%- if s.image_mobile.width >= 375 -%}{{ s.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
+                  {%- if s.image_mobile.width >= 550 -%}{{ s.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
+                  {%- if s.image_mobile.width >= 750 -%}{{ s.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
+                  {{ s.image_mobile | image_url }} {{ s.image_mobile.width }}w
+                "
+              >
+            {%- endif -%}
+            <img
+              src="{{ fallback_image | image_url: width: 900 }}"
+              srcset="
+                {%- if fallback_image.width >= 400 -%}{{ fallback_image | image_url: width: 400 }} 400w,{%- endif -%}
+                {%- if fallback_image.width >= 600 -%}{{ fallback_image | image_url: width: 600 }} 600w,{%- endif -%}
+                {%- if fallback_image.width >= 900 -%}{{ fallback_image | image_url: width: 900 }} 900w,{%- endif -%}
+                {{ fallback_image | image_url }} {{ fallback_image.width }}w
+              "
+              sizes="(min-width: 750px) 45vw, 100vw"
+              width="{{ fallback_image.width }}"
+              height="{{ fallback_image.height }}"
+              alt="{{ fallback_image.alt | escape }}"
+              class="glass-feature__image"
+              style="object-position: {{ s.focal_point | replace: '-', ' ' }};"
+              loading="lazy"
+            >
+          </picture>
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg glass-feature__image' }}
+        {%- endif -%}
+      </div>
+
+      <div class="glass-feature__content">
+        {%- if s.top_text != blank -%}
+          <p class="glass-feature__label">{{ s.top_text | escape }}</p>
+        {%- endif -%}
+
+        {%- if s.heading != blank -%}
+          <h2 class="glass-feature__heading">{{ s.heading | escape }}</h2>
+        {%- endif -%}
+
+        {%- if s.description != blank -%}
+          <div class="glass-feature__description rte">{{ s.description }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Glass Image + Text",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image",
+      "info": "Used sharp on one side and blurred as the full-width background. Also used on mobile if no mobile image is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Shown only below 750px wide. Falls back to the desktop image if left blank."
+    },
+    {
+      "type": "select",
+      "id": "focal_point",
+      "label": "Image position (crop)",
+      "info": "Which part of the sharp image stays in frame when it crops.",
+      "options": [
+        { "value": "left-top", "label": "Top left" },
+        { "value": "center-top", "label": "Top center" },
+        { "value": "right-top", "label": "Top right" },
+        { "value": "left-center", "label": "Middle left" },
+        { "value": "center-center", "label": "Middle center" },
+        { "value": "right-center", "label": "Middle right" },
+        { "value": "left-bottom", "label": "Bottom left" },
+        { "value": "center-bottom", "label": "Bottom center" },
+        { "value": "right-bottom", "label": "Bottom right" }
+      ],
+      "default": "center-center"
+    },
+    {
+      "type": "range",
+      "id": "background_blur",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Background blur amount",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Background overlay opacity",
+      "info": "Tinted with the section's color scheme background color.",
+      "default": 70
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Small label",
+      "default": "About Us"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Where Wellness Meets Purpose."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>The founders of Trianon International Incorporated (TII) have built the foundation of the company on its corporate mission which is: “We are a world-class, highly respected multinational company helping everyone achieve holistic health and wellness.”</p>"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Glass Image + Text"
+    }
+  ]
+}
+{% endschema %}

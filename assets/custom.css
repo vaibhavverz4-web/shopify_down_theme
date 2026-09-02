@@ -640,3 +640,292 @@ a.tmarquee__text:focus-visible {
   color: #d0021b !important;
   font-weight: 600;
 }
+
+/* ------------------------------------------------------------
+   CTA Banner — sections/cta-banner.liquid
+   ------------------------------------------------------------ */
+.cta-banner {
+  position: relative;
+  display: flex;
+  min-height: var(--cta-banner-height, 420px);
+  overflow: hidden;
+}
+
+.cta-banner__media {
+  position: absolute;
+  inset: 0;
+}
+
+.cta-banner__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cta-banner__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cta-banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--cta-banner-overlay-top, rgba(0, 0, 0, 0.3)) 0%,
+    var(--cta-banner-overlay-bottom, rgba(0, 0, 0, 0.5)) 100%
+  );
+}
+
+.cta-banner__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-height: var(--cta-banner-height, 420px);
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-banner--align-left .cta-banner__inner {
+  justify-content: flex-start;
+}
+
+.cta-banner--align-right .cta-banner__inner {
+  justify-content: flex-end;
+}
+
+.cta-banner__content {
+  max-width: 62rem;
+  padding: 2rem 0;
+  color: rgb(var(--color-foreground));
+  text-align: center;
+}
+
+.cta-banner--align-left .cta-banner__content {
+  text-align: left;
+}
+
+.cta-banner--align-right .cta-banner__content {
+  text-align: right;
+}
+
+.cta-banner__eyebrow {
+  margin: 0 0 0.8rem;
+  font-size: 1.3rem;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.85);
+}
+
+.cta-banner__heading {
+  margin: 0 0 1.2rem;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(2.8rem, 4vw + 1rem, 4.8rem);
+  line-height: 1.1;
+  color: rgb(var(--color-foreground));
+}
+
+.cta-banner__description {
+  margin: 0 auto 2rem;
+  max-width: 52rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.85);
+}
+
+.cta-banner--align-left .cta-banner__description {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.cta-banner--align-right .cta-banner__description {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.cta-banner__description p {
+  margin: 0;
+}
+
+.cta-banner__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.3rem 2.4rem;
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0.2rem;
+  transition:
+    background-color var(--duration-short) ease,
+    color var(--duration-short) ease;
+}
+
+.cta-banner__button:hover {
+  background-color: rgb(var(--color-button-hover));
+  color: rgb(var(--color-button-text-hover));
+}
+
+.cta-banner__button-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+}
+
+@media screen and (max-width: 749px) {
+  .cta-banner__content {
+    padding: 1.5rem 2rem;
+  }
+
+  .cta-banner__heading {
+    font-size: clamp(2.4rem, 8vw, 3.2rem);
+  }
+
+  .cta-banner__description {
+    font-size: 1.4rem;
+  }
+
+  .cta-banner__button {
+    padding: 1.1rem 2rem;
+    font-size: 1.3rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   Glass Image + Text — sections/glass-image-text.liquid
+   ------------------------------------------------------------ */
+.glass-feature {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-feature__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.glass-feature__backdrop-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.glass-feature__backdrop-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(var(--glass-feature-blur, 20px));
+  transform: scale(1.15);
+}
+
+.glass-feature__backdrop-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--glass-feature-overlay, rgba(255, 255, 255, 0.7));
+}
+
+.glass-feature__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-feature__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 2.4rem;
+}
+
+.glass-feature__media {
+  position: relative;
+}
+
+.glass-feature__image,
+.glass-feature__media .placeholder-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--media-radius, 0);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15);
+}
+
+.glass-feature__image {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.glass-feature__content {
+  color: rgb(var(--color-foreground));
+  text-align: left;
+}
+
+.glass-feature--content-center .glass-feature__content {
+  text-align: center;
+}
+
+.glass-feature--content-right .glass-feature__content {
+  text-align: right;
+}
+
+.glass-feature__label {
+  margin: 0 0 0.8rem;
+  font-size: 1.3rem;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+.glass-feature__heading {
+  margin: 0 0 1.6rem;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(2.2rem, 6vw, 2.8rem);
+  line-height: 1.15;
+  color: rgb(var(--color-foreground));
+}
+
+.glass-feature__description {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: rgba(var(--color-foreground), 0.85);
+}
+
+.glass-feature__description p {
+  margin: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .glass-feature__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+  }
+
+  .glass-feature--image-right .glass-feature__media {
+    order: 2;
+  }
+
+  .glass-feature--image-right .glass-feature__content {
+    order: 1;
+  }
+
+  .glass-feature__heading {
+    font-size: clamp(2.6rem, 2.5vw + 1.6rem, 3.8rem);
+  }
+
+  .glass-feature__description {
+    font-size: 1.5rem;
+  }
+}

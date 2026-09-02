@@ -286,7 +286,7 @@
       ],
       "name": "Promo Banner Cards",
       "settings": {
-        "color_scheme": "",
+        "color_scheme": "scheme-1",
         "text_alignment": "left",
         "overlay_opacity": 10,
         "border_radius": 12,

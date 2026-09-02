@@ -13,14 +13,13 @@
 {%- liquid
   assign s = section.settings
   assign uid = section.id
-  assign overlay_alpha = s.overlay_opacity | divided_by: 100.0
 -%}
 
 {%- style -%}
   #PromoCards-{{ uid }} {
     --promo-cards-gap: {{ s.card_gap }}px;
     --promo-cards-radius: {{ s.border_radius }}px;
-    --promo-cards-overlay: rgba(var(--color-background), {{ overlay_alpha }});
+    --promo-cards-overlay: rgba(var(--color-background), {{ s.overlay_opacity }}%);
     padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
   }

@@ -1,0 +1,308 @@
+{%- comment -%}
+  From The Blog — new custom section
+  Path: sections/from-the-blog.liquid
+
+  Each card is its own block built around Shopify's native article picker
+  (`"type": "article"`). Any block setting left blank automatically falls
+  back to that article's real data; "Reading time" has no equivalent field
+  on Shopify's Article object, so it's always merchant-entered text.
+  Static CSS lives in assets/custom.css (class prefix: blog-card__).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+-%}
+
+{%- style -%}
+  #FromTheBlog-{{ uid }} {
+    --blog-cards-gap: {{ s.card_gap }}px;
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #FromTheBlog-{{ uid }} {
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div id="FromTheBlog-{{ uid }}" class="from-the-blog color-{{ s.color_scheme }} gradient">
+  <div class="from-the-blog__inner page-width">
+    {%- if s.heading != blank -%}
+      <h2 class="from-the-blog__heading">{{ s.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul
+        class="from-the-blog__grid list-unstyled from-the-blog__grid--desktop-{{ s.columns_desktop }} from-the-blog__grid--mobile-{{ s.columns_mobile }}"
+        role="list"
+      >
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign article = block.settings.article
+            assign card_image = block.settings.image | default: article.image
+            assign card_title = block.settings.title | default: article.title
+            assign card_link = block.settings.button_link | default: article.url
+
+            assign card_excerpt = block.settings.excerpt
+            if card_excerpt == blank and article != blank
+              assign card_excerpt = article.excerpt_or_content | strip_html | truncatewords: 30
+            endif
+
+            assign card_date = block.settings.date
+            if card_date == blank and article != blank
+              assign card_date = article.published_at | date: '%B %d, %Y'
+            endif
+          -%}
+          <li class="blog-card blog-card--ratio-{{ s.image_ratio }}" {{ block.shopify_attributes }}>
+            <a
+              class="blog-card__media"
+              {% if card_link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ card_link }}"
+              {% endif %}
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              {%- if card_image != blank -%}
+                <img
+                  src="{{ card_image | image_url: width: 700 }}"
+                  srcset="
+                    {%- if card_image.width >= 400 -%}{{ card_image | image_url: width: 400 }} 400w,{%- endif -%}
+                    {%- if card_image.width >= 600 -%}{{ card_image | image_url: width: 600 }} 600w,{%- endif -%}
+                    {%- if card_image.width >= 700 -%}{{ card_image | image_url: width: 700 }} 700w,{%- endif -%}
+                    {{ card_image | image_url }} {{ card_image.width }}w
+                  "
+                  sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
+                  width="{{ card_image.width }}"
+                  height="{{ card_image.height }}"
+                  alt="{{ card_title | escape }}"
+                  class="blog-card__image"
+                  loading="lazy"
+                >
+              {%- else -%}
+                {{ 'blog-apparel-1' | placeholder_svg_tag: 'placeholder-svg blog-card__image' }}
+              {%- endif -%}
+            </a>
+
+            <div class="blog-card__content">
+              {%- if card_date != blank or block.settings.reading_time != blank -%}
+                <p class="blog-card__meta">
+                  {%- if card_date != blank -%}
+                    <span>{{ card_date }}</span>
+                  {%- endif -%}
+                  {%- if card_date != blank and block.settings.reading_time != blank -%}
+                    <span class="blog-card__meta-divider" aria-hidden="true">&bull;</span>
+                  {%- endif -%}
+                  {%- if block.settings.reading_time != blank -%}
+                    <span>{{ block.settings.reading_time | escape }}</span>
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+
+              {%- if card_title != blank -%}
+                <h3 class="blog-card__title">
+                  {%- if card_link != blank -%}
+                    <a href="{{ card_link }}">{{ card_title | escape }}</a>
+                  {%- else -%}
+                    {{ card_title | escape }}
+                  {%- endif -%}
+                </h3>
+              {%- endif -%}
+
+              {%- if card_excerpt != blank -%}
+                <p class="blog-card__excerpt">{{ card_excerpt }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.button_text != blank -%}
+                <a
+                  class="blog-card__button"
+                  {% if card_link == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ card_link }}"
+                  {% endif %}
+                >
+                  <span>{{ block.settings.button_text | escape }}</span>
+                  <svg class="blog-card__button-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path
+                      d="M1 8h13M9 3l5 5-5 5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "From The Blog",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "From The Blog"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Number of columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 1,
+      "label": "Number of columns on mobile",
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "landscape", "label": "Landscape (16:9)" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (3:4)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "blog_post",
+      "name": "Blog post",
+      "settings": [
+        {
+          "type": "article",
+          "id": "article",
+          "label": "Blog article",
+          "info": "Pulls title, image, excerpt, date and link from this article automatically. Any field below left blank uses the article's own data."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override",
+          "info": "Optional. Uses the article's featured image if left blank."
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date override",
+          "info": "Optional. Uses the article's published date if left blank."
+        },
+        {
+          "type": "text",
+          "id": "reading_time",
+          "label": "Reading time",
+          "info": "Shopify articles don't store a reading time, so this is always entered manually.",
+          "default": "2 min read"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title override",
+          "info": "Optional. Uses the article's title if left blank."
+        },
+        {
+          "type": "textarea",
+          "id": "excerpt",
+          "label": "Excerpt override",
+          "info": "Optional. Uses the article's excerpt (or a trimmed version of its content) if left blank."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Read More"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link override",
+          "info": "Optional. Uses the article's own URL if left blank."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "From The Blog",
+      "blocks": [
+        { "type": "blog_post" },
+        { "type": "blog_post" },
+        { "type": "blog_post" }
+      ]
+    }
+  ]
+}
+{% endschema %}

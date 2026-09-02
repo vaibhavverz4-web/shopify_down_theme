@@ -124,7 +124,7 @@
       ],
       "name": "Trianon Marquee",
       "settings": {
-        "color_scheme": "scheme-4",
+        "color_scheme": "scheme-5",
         "speed": 40,
         "direction": "left",
         "pause_on_hover": true,

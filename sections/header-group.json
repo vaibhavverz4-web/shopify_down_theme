@@ -42,16 +42,16 @@
           "type": "mega_menu",
           "settings": {
             "top_link": "Shop",
-            "image": "",
-            "url": ""
+            "image": "shopify://shop_images/Rectangle_31.png",
+            "url": "#"
           }
         },
         "mega_menu_image_2": {
           "type": "mega_menu",
           "settings": {
             "top_link": "Shop",
-            "image": "",
-            "url": ""
+            "image": "shopify://shop_images/8262a723d5de7f0f5e8493f6c32cb2ed25030538.jpg",
+            "url": "#"
           }
         }
       },

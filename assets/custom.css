@@ -1192,3 +1192,102 @@ a.tmarquee__text:focus-visible {
     margin: 0 auto;
   }
 }
+
+/* ------------------------------------------------------------
+   Promo Banner Cards — sections/promo-banner-cards.liquid
+   ------------------------------------------------------------ */
+.promo-cards__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--promo-cards-gap, 8px);
+}
+
+.promo-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--promo-cards-radius, 12px);
+  text-decoration: none;
+}
+
+.promo-card__media {
+  position: absolute;
+  inset: 0;
+}
+
+.promo-card__image,
+.promo-card .placeholder-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.promo-card__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--promo-cards-overlay, transparent);
+}
+
+.promo-card__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 2rem 3rem;
+}
+
+.promo-cards--align-left .promo-card__content {
+  justify-content: flex-start;
+}
+
+.promo-cards--align-center .promo-card__content {
+  justify-content: center;
+}
+
+.promo-cards--align-right .promo-card__content {
+  justify-content: flex-end;
+}
+
+.promo-card__heading {
+  max-width: 60%;
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(1.6rem, 1vw + 1.3rem, 2.2rem);
+  line-height: 1.35;
+  color: rgb(var(--color-foreground));
+}
+
+.promo-cards--align-center .promo-card__heading {
+  max-width: 80%;
+  text-align: center;
+}
+
+.promo-cards--align-right .promo-card__heading {
+  text-align: right;
+}
+
+@media screen and (min-width: 750px) {
+  .promo-cards__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .promo-card {
+    aspect-ratio: 4 / 3;
+  }
+
+  .promo-card__content {
+    padding: 1.6rem 2rem;
+  }
+
+  .promo-card__heading {
+    max-width: 75%;
+    font-size: 1.5rem;
+  }
+}

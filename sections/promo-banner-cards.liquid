@@ -1,0 +1,236 @@
+{%- comment -%}
+  Promo Banner Cards — new custom section
+  Path: sections/promo-banner-cards.liquid
+
+  A row of equal-width, image-backed promo cards (one per block), each
+  linking out, with a heading positioned over the image. Desktop/mobile
+  image fallback follows the same <picture> pattern used by the other
+  custom sections in this theme (cta-banner, glass-image-text,
+  health-categories).
+  Static CSS lives in assets/custom.css (class prefix: promo-card__).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign overlay_alpha = s.overlay_opacity | divided_by: 100.0
+-%}
+
+{%- style -%}
+  #PromoCards-{{ uid }} {
+    --promo-cards-gap: {{ s.card_gap }}px;
+    --promo-cards-radius: {{ s.border_radius }}px;
+    --promo-cards-overlay: rgba(var(--color-background), {{ overlay_alpha }});
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #PromoCards-{{ uid }} {
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="PromoCards-{{ uid }}"
+  class="promo-cards color-{{ s.color_scheme }} gradient promo-cards--align-{{ s.text_alignment }}"
+>
+  <div class="promo-cards__inner page-width">
+    {%- if section.blocks.size > 0 -%}
+      <div class="promo-cards__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign fallback_image = block.settings.image | default: block.settings.image_mobile
+          -%}
+          <a
+            class="promo-card"
+            {% if block.settings.heading_link == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ block.settings.heading_link }}"
+            {% endif %}
+            {{ block.shopify_attributes }}
+          >
+            <div class="promo-card__media">
+              {%- if fallback_image != blank -%}
+                <picture>
+                  {%- if block.settings.image_mobile != blank -%}
+                    <source
+                      media="(max-width: 749px)"
+                      srcset="
+                        {%- if block.settings.image_mobile.width >= 375 -%}{{ block.settings.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
+                        {%- if block.settings.image_mobile.width >= 550 -%}{{ block.settings.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
+                        {%- if block.settings.image_mobile.width >= 750 -%}{{ block.settings.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
+                        {{ block.settings.image_mobile | image_url }} {{ block.settings.image_mobile.width }}w
+                      "
+                    >
+                  {%- endif -%}
+                  <img
+                    src="{{ fallback_image | image_url: width: 900 }}"
+                    srcset="
+                      {%- if fallback_image.width >= 400 -%}{{ fallback_image | image_url: width: 400 }} 400w,{%- endif -%}
+                      {%- if fallback_image.width >= 600 -%}{{ fallback_image | image_url: width: 600 }} 600w,{%- endif -%}
+                      {%- if fallback_image.width >= 900 -%}{{ fallback_image | image_url: width: 900 }} 900w,{%- endif -%}
+                      {{ fallback_image | image_url }} {{ fallback_image.width }}w
+                    "
+                    sizes="(min-width: 750px) 50vw, 100vw"
+                    width="{{ fallback_image.width }}"
+                    height="{{ fallback_image.height }}"
+                    alt="{{ block.settings.heading | escape }}"
+                    class="promo-card__image"
+                    loading="lazy"
+                  >
+                </picture>
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg promo-card__image' }}
+              {%- endif -%}
+              <div class="promo-card__overlay"></div>
+            </div>
+            <div class="promo-card__content">
+              {%- if block.settings.heading != blank -%}
+                <p class="promo-card__heading">{{ block.settings.heading | escape }}</p>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Promo Banner Cards",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "info": "Tinted with the color scheme's background color, to help the dark text stay readable.",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promo_card",
+      "name": "Promo card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image",
+          "info": "Also used on mobile if no mobile image is set."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image",
+          "info": "Optional. Shown only below 750px wide. Falls back to the desktop image if left blank."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Up to 15% off On All Women's Medicine"
+        },
+        {
+          "type": "url",
+          "id": "heading_link",
+          "label": "Heading link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Banner Cards",
+      "blocks": [
+        {
+          "type": "promo_card",
+          "settings": { "heading": "Up to 15% off On All Women's Medicine" }
+        },
+        {
+          "type": "promo_card",
+          "settings": { "heading": "Up to 30% off Adult Power Drink" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

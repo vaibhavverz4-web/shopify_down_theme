@@ -622,3 +622,21 @@ a.tmarquee__text:focus-visible {
     transition: none;
   }
 }
+
+/* ------------------------------------------------------------
+   Product card price — Figma match
+   Selectors reuse Dawn's existing snippets/price.liquid markup
+   (.price--on-sale / .price-item--regular / .price-item--sale)
+   scoped to .card-information so only product-grid cards are
+   affected. !important guards against the WPD pricing app's
+   own inline price styling.
+   ------------------------------------------------------------ */
+.card-information .price--on-sale .price-item--regular {
+  text-decoration: line-through !important;
+  color: rgba(var(--color-foreground), 0.6) !important;
+}
+
+.card-information .price--on-sale .price-item--sale {
+  color: #d0021b !important;
+  font-weight: 600;
+}

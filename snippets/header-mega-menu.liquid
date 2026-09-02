@@ -11,7 +11,12 @@
       <li>
         {%- if link.links != blank -%}
           {%- liquid
-            assign mega_menu_images = section.blocks | where: 'type', 'mega_menu' | where: 'settings.top_link', link.title
+            assign mega_menu_image_count = 0
+            for block in section.blocks
+              if block.type == 'mega_menu' and block.settings.top_link == link.title
+                assign mega_menu_image_count = mega_menu_image_count | plus: 1
+              endif
+            endfor
           -%}
           <header-menu>
             <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
@@ -33,7 +38,7 @@
                 class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
                 tabindex="-1"
               >
-                <div class="mega-menu__inner page-width{% if mega_menu_images.size > 0 %} mega-menu__inner--has-images{% endif %}">
+                <div class="mega-menu__inner page-width{% if mega_menu_image_count > 0 %} mega-menu__inner--has-images{% endif %}">
                   <ul
                     class="mega-menu__list{% if link.levels == 1 %} mega-menu__list--condensed{% endif %}"
                     role="list"
@@ -71,27 +76,29 @@
                       </li>
                     {%- endfor -%}
                   </ul>
-                  {%- if mega_menu_images.size > 0 -%}
+                  {%- if mega_menu_image_count > 0 -%}
                     <div class="mega-menu__images">
-                      {%- for image_block in mega_menu_images -%}
-                        <a
-                          href="{{ image_block.settings.url }}"
-                          class="mega-menu__image-tile"
-                          {% if image_block.settings.url == blank %}
-                            role="link" aria-disabled="true"
-                          {% endif %}
-                          {{ image_block.shopify_attributes }}
-                        >
-                          {%- if image_block.settings.image != blank -%}
-                            {{
-                              image_block.settings.image
-                              | image_url: width: 700
-                              | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 100vw', widths: '350, 500, 700'
-                            }}
-                          {%- else -%}
-                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg mega-menu__image-placeholder' }}
-                          {%- endif -%}
-                        </a>
+                      {%- for image_block in section.blocks -%}
+                        {%- if image_block.type == 'mega_menu' and image_block.settings.top_link == link.title -%}
+                          <a
+                            href="{{ image_block.settings.url }}"
+                            class="mega-menu__image-tile"
+                            {% if image_block.settings.url == blank %}
+                              role="link" aria-disabled="true"
+                            {% endif %}
+                            {{ image_block.shopify_attributes }}
+                          >
+                            {%- if image_block.settings.image != blank -%}
+                              {{
+                                image_block.settings.image
+                                | image_url: width: 700
+                                | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 100vw', widths: '350, 500, 700'
+                              }}
+                            {%- else -%}
+                              {{ 'image' | placeholder_svg_tag: 'placeholder-svg mega-menu__image-placeholder' }}
+                            {%- endif -%}
+                          </a>
+                        {%- endif -%}
                       {%- endfor -%}
                     </div>
                   {%- endif -%}

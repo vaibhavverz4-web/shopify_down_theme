@@ -1,0 +1,246 @@
+{%- comment -%}
+  Testimonial Scroll — new custom section
+  Path: sections/testimonial-scroll.liquid
+
+  Two-column section: heading/description on the left, an infinitely
+  looping vertical stack of review cards on the right. The loop technique
+  (duplicate the content once, animate exactly -50%, aria-hide the
+  duplicate) mirrors the existing sections/trianon-marquee.liquid section,
+  just running on the Y axis instead of X — pure CSS, no JS needed.
+  Static CSS lives in assets/custom.css (class prefix: testimonial-scroll__
+  and testimonial-card__).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign copies = 1
+  if s.enable_animation and section.blocks.size > 0
+    assign copies = 2
+  endif
+-%}
+
+{%- style -%}
+  #TestimonialScroll-{{ uid }} {
+    --testimonial-scroll-speed: {{ s.animation_speed }}s;
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #TestimonialScroll-{{ uid }} {
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="TestimonialScroll-{{ uid }}"
+  class="testimonial-scroll color-{{ s.color_scheme }} gradient{% if copies == 1 %} testimonial-scroll--static{% endif %}"
+>
+  <div class="testimonial-scroll__inner page-width">
+    <div class="testimonial-scroll__grid">
+      <div class="testimonial-scroll__content">
+        {%- if s.heading != blank -%}
+          <h2 class="testimonial-scroll__heading">{{ s.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if s.description != blank -%}
+          <div class="testimonial-scroll__description rte">{{ s.description }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="testimonial-scroll__viewport">
+          <div class="testimonial-scroll__track">
+            {%- for i in (1..copies) -%}
+              <ul
+                class="testimonial-scroll__list list-unstyled"
+                role="list"
+                {% unless forloop.first %}
+                  aria-hidden="true"
+                {% endunless %}
+              >
+                {%- for block in section.blocks -%}
+                  <li class="testimonial-card" {{ block.shopify_attributes }}>
+                    {%- if block.settings.review_title != blank -%}
+                      <p class="testimonial-card__title">{{ block.settings.review_title | escape }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.review_text != blank -%}
+                      <p class="testimonial-card__text">{{ block.settings.review_text | escape }}</p>
+                    {%- endif -%}
+                    <div class="testimonial-card__meta">
+                      {%- if block.settings.customer_name != blank -%}
+                        <span class="testimonial-card__name">{{ block.settings.customer_name | escape }}</span>
+                      {%- endif -%}
+                      {%- if block.settings.show_verified -%}
+                        <span class="testimonial-card__divider" aria-hidden="true">|</span>
+                        <span class="testimonial-card__verified">Verified</span>
+                      {%- endif -%}
+                      {%- if block.settings.review_date != blank -%}
+                        <span class="testimonial-card__divider" aria-hidden="true">|</span>
+                        <span class="testimonial-card__date">{{ block.settings.review_date | escape }}</span>
+                      {%- endif -%}
+                    </div>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonial Scroll",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real Stories. Real Wellness."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover how our health supplements, skincare, and wellness solutions have helped customers, healthcare professionals, and business partners achieve their wellness goals with confidence.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable scrolling animation",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "unit": "s",
+      "label": "Animation speed",
+      "info": "Time for one full loop. Higher is slower.",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "text",
+          "id": "review_title",
+          "label": "Review title",
+          "default": "Lorem ipsum dolor sit."
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review description",
+          "default": "Lorem ipsum dolor sit amet consectetur. Proin viverra."
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer name",
+          "default": "Customer name"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_verified",
+          "label": "Show \"Verified\" label",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "review_date",
+          "label": "Review date",
+          "default": "1 month ago"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial Scroll",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "review_title": "Lorem ipsum dolor sit.",
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Proin viverra.",
+            "customer_name": "Josh T.",
+            "review_date": "1 month ago"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "review_title": "Dolor sit amet consectetur.",
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Gravida.",
+            "customer_name": "Priya S.",
+            "review_date": "3 weeks ago"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "review_title": "Ipsum dolor sit amet consectetur.",
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Bibendum eget.",
+            "customer_name": "Amelia R.",
+            "review_date": "2 weeks ago"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

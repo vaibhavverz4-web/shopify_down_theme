@@ -37,6 +37,28 @@
     },
     "header": {
       "type": "header",
+      "blocks": {
+        "mega_menu_image_1": {
+          "type": "mega_menu",
+          "settings": {
+            "top_link": "Shop",
+            "image": "",
+            "url": ""
+          }
+        },
+        "mega_menu_image_2": {
+          "type": "mega_menu",
+          "settings": {
+            "top_link": "Shop",
+            "image": "",
+            "url": ""
+          }
+        }
+      },
+      "block_order": [
+        "mega_menu_image_1",
+        "mega_menu_image_2"
+      ],
       "settings": {
         "logo_position": "middle-center",
         "mobile_logo_position": "center",

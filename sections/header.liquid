@@ -282,15 +282,10 @@
       </div>
       {% render 'header-search', input_id: 'Search-In-Modal' %}
 
-      {%- if shop.customer_accounts_enabled -%}
-        <shopify-account
-          menu="{{ settings.customer_account_menu | default: 'customer-account-main-menu' }}"
-          class="header__icon header__icon--account link focus-inset"
-        >
-          <span slot="signed-out-avatar" class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
-          <span slot="signed-out-avatar" class="visually-hidden">{{ 'customer.log_in' | t }}</span>
-        </shopify-account>
-      {%- endif -%}
+      {%- comment -%} iWish wishlist link in header {%- endcomment -%}
+      <div class="iwish-header-link">
+        {% render 'wishlist-app-links', linkType: 'wishlist-page-link' %}
+      </div>
 
       {%- for block in section.blocks -%}
         {%- case block.type -%}
@@ -298,11 +293,6 @@
             {% render block %}
         {%- endcase -%}
       {%- endfor -%}
-
-      {%- comment -%} iWish wishlist link in header {%- endcomment -%}
-      <div class="iwish-header-link">
-        {% render 'wishlist-app-links', linkType: 'wishlist-page-link' %}
-      </div>
 
       <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
         {% if cart == empty %}
@@ -320,6 +310,16 @@
           </div>
         {%- endif -%}
       </a>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <shopify-account
+          menu="{{ settings.customer_account_menu | default: 'customer-account-main-menu' }}"
+          class="header__icon header__icon--account link focus-inset"
+        >
+          <span slot="signed-out-avatar" class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+          <span slot="signed-out-avatar" class="visually-hidden">{{ 'customer.log_in' | t }}</span>
+        </shopify-account>
+      {%- endif -%}
     </div>
   </header>
 </{{ header_tag }}>
@@ -507,7 +507,7 @@
 {
   "name": "t:sections.header.name",
   "class": "section-header",
-  "max_blocks": 3,
+  "max_blocks": 8,
   "settings": [
     {
       "type": "select",
@@ -686,6 +686,29 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "mega_menu",
+      "name": "Mega menu image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "top_link",
+          "label": "Menu item",
+          "info": "Must exactly match the label of a top-level menu item that has a dropdown (for example \"Shop\"). Add one block per image — multiple blocks with the same menu item show side by side."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link (optional)",
+          "info": "Where the image links to when clicked."
+        }
+      ]
     }
   ]
 }

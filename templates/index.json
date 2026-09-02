@@ -176,7 +176,7 @@
       "type": "cta-banner",
       "name": "CTA Banner",
       "settings": {
-        "color_scheme": "",
+        "color_scheme": "scheme-1",
         "image": "shopify://shop_images/695c334b500b1ff0ee0dfa68a20d1b0a0af77554.jpg",
         "focal_point": "center-center",
         "overlay_opacity": 50,

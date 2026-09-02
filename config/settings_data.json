@@ -9,8 +9,8 @@
  */
 {
   "current": {
-    "logo": "shopify://shop_images/ultra_1.png",
-    "logo_width": 90,
+    "logo": "shopify://shop_images/logo.png",
+    "logo_width": 200,
     "type_header_font": "assistant_n7",
     "heading_scale": 100,
     "type_body_font": "assistant_n4",
@@ -157,8 +157,8 @@
           "button_hover": "#025c2f",
           "button_label_hover": "#ffffff",
           "secondary_button_label": "#121212",
-          "star": "#FFB800",
-          "link": "#1E24CF",
+          "star": "#ffb800",
+          "link": "#1e24cf",
           "link_hover": "#025c2f",
           "shadow": "#121212"
         }
@@ -176,7 +176,7 @@
           "button_hover": "#025c2f",
           "button_label_hover": "#ffffff",
           "secondary_button_label": "#121212",
-          "star": "#FFB800",
+          "star": "#ffb800",
           "link": "#027a3e",
           "link_hover": "#025c2f",
           "shadow": "#121212"
@@ -195,7 +195,7 @@
           "button_hover": "#025c2f",
           "button_label_hover": "#ffffff",
           "secondary_button_label": "#ffffff",
-          "star": "#FFB800",
+          "star": "#ffb800",
           "link": "#027a3e",
           "link_hover": "#025c2f",
           "shadow": "#121212"
@@ -214,7 +214,7 @@
           "button_hover": "#025c2f",
           "button_label_hover": "#ffffff",
           "secondary_button_label": "#ffffff",
-          "star": "#FFB800",
+          "star": "#ffb800",
           "link": "#027a3e",
           "link_hover": "#025c2f",
           "shadow": "#121212"
@@ -233,7 +233,7 @@
           "button_hover": "#025c2f",
           "button_label_hover": "#ffffff",
           "secondary_button_label": "#ffffff",
-          "star": "#FFB800",
+          "star": "#ffb800",
           "link": "#027a3e",
           "link_hover": "#025c2f",
           "shadow": "#121212"

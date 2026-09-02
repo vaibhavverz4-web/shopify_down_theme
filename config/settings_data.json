@@ -174,7 +174,7 @@
           "button": "#121212",
           "button_label": "#f3f3f3",
           "button_hover": "#025c2f",
-          "button_label_hover": "#ffffff",
+          "button_label_hover": "#000000",
           "secondary_button_label": "#121212",
           "star": "#ffb800",
           "link": "#027a3e",
@@ -203,7 +203,7 @@
       },
       "scheme-4": {
         "settings": {
-          "background": "#027A3E",
+          "background": "#027a3e",
           "background_gradient": "",
           "text": "#ffffff",
           "heading": "#ffffff",
@@ -222,12 +222,12 @@
       },
       "scheme-5": {
         "settings": {
-          "background": "#C9B487",
+          "background": "#c9b487",
           "background_gradient": "",
           "text": "#ffffff",
           "heading": "#121212",
           "subheading": "#027a3e",
-          "description": "#FFFFFF",
+          "description": "#ffffff",
           "button": "#ffffff",
           "button_label": "#334fb4",
           "button_hover": "#025c2f",

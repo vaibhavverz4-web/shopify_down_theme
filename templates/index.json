@@ -191,12 +191,31 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "glass_image_text_paK6Y7": {
+      "type": "glass-image-text",
+      "name": "Glass Image + Text",
+      "settings": {
+        "color_scheme": "",
+        "image": "shopify://shop_images/08befabddec3b4ef8ae0f670537a1eebbd3e5781.jpg",
+        "focal_point": "center-center",
+        "background_blur": 20,
+        "overlay_opacity": 70,
+        "top_text": "About Us",
+        "heading": "Where Wellness Meets Purpose.",
+        "description": "<p>The founders of Trianon International Incorporated (TII) have built the foundation of the company on its corporate mission which is: “We are a world-class, highly respected multinational company helping everyone achieve holistic health and wellness.”</p>",
+        "image_position": "left",
+        "content_alignment": "left",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
     }
   },
   "order": [
     "trianon_hero_YbPYwk",
     "trianon_marquee_h6Lq39",
     "featured_collection_LFsHqe",
-    "cta_banner_agTYdA"
+    "cta_banner_agTYdA",
+    "glass_image_text_paK6Y7"
   ]
 }

@@ -209,6 +209,56 @@
         "padding_top": 100,
         "padding_bottom": 100
       }
+    },
+    "testimonial_scroll_MFN7yt": {
+      "type": "testimonial-scroll",
+      "blocks": {
+        "testimonial_zezT6A": {
+          "type": "testimonial",
+          "settings": {
+            "review_title": "Lorem ipsum dolor sit.",
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Proin viverra.",
+            "customer_name": "Josh T.",
+            "show_verified": true,
+            "review_date": "1 month ago"
+          }
+        },
+        "testimonial_HGhgpt": {
+          "type": "testimonial",
+          "settings": {
+            "review_title": "Dolor sit amet consectetur.",
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Gravida.",
+            "customer_name": "Priya S.",
+            "show_verified": true,
+            "review_date": "3 weeks ago"
+          }
+        },
+        "testimonial_NnrKb7": {
+          "type": "testimonial",
+          "settings": {
+            "review_title": "Ipsum dolor sit amet consectetur.",
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Bibendum eget.",
+            "customer_name": "Amelia R.",
+            "show_verified": true,
+            "review_date": "2 weeks ago"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_zezT6A",
+        "testimonial_HGhgpt",
+        "testimonial_NnrKb7"
+      ],
+      "name": "Testimonial Scroll",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "heading": "Real Stories. Real Wellness.",
+        "description": "<p>Discover how our health supplements, skincare, and wellness solutions have helped customers, healthcare professionals, and business partners achieve their wellness goals with confidence.</p>",
+        "enable_animation": true,
+        "animation_speed": 18,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     }
   },
   "order": [
@@ -216,6 +266,7 @@
     "trianon_marquee_h6Lq39",
     "featured_collection_LFsHqe",
     "cta_banner_agTYdA",
-    "glass_image_text_paK6Y7"
+    "glass_image_text_paK6Y7",
+    "testimonial_scroll_MFN7yt"
   ]
 }

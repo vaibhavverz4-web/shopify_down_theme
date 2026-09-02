@@ -1,0 +1,284 @@
+{%- comment -%}
+  Health Categories — new custom section
+  Path: sections/health-categories.liquid
+
+  Full-width photo banner with a centered, stacked list of category links.
+  Static CSS lives in assets/custom.css (class prefix: health-categories__).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign fallback_image = s.image | default: s.image_mobile
+  assign overlay_alpha = s.overlay_opacity | divided_by: 100.0
+-%}
+
+{%- style -%}
+  #HealthCategories-{{ uid }} {
+    --health-categories-height: {{ s.height_mobile }}px;
+    --health-categories-overlay: rgba(0, 0, 0, {{ overlay_alpha }});
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #HealthCategories-{{ uid }} {
+      --health-categories-height: {{ s.height }}px;
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="HealthCategories-{{ uid }}"
+  class="health-categories color-{{ s.color_scheme }} gradient health-categories--align-{{ s.text_alignment }} health-categories--text-{{ s.text_size }}"
+>
+  {%- if fallback_image != blank -%}
+    <div class="health-categories__media" aria-hidden="true">
+      <picture>
+        {%- if s.image_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {%- if s.image_mobile.width >= 375 -%}{{ s.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
+              {%- if s.image_mobile.width >= 550 -%}{{ s.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
+              {%- if s.image_mobile.width >= 750 -%}{{ s.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
+              {{ s.image_mobile | image_url }} {{ s.image_mobile.width }}w
+            "
+          >
+        {%- endif -%}
+        <img
+          src="{{ fallback_image | image_url: width: 1500 }}"
+          srcset="
+            {%- if fallback_image.width >= 750 -%}{{ fallback_image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if fallback_image.width >= 1100 -%}{{ fallback_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {%- if fallback_image.width >= 1500 -%}{{ fallback_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if fallback_image.width >= 1780 -%}{{ fallback_image | image_url: width: 1780 }} 1780w,{%- endif -%}
+            {%- if fallback_image.width >= 2000 -%}{{ fallback_image | image_url: width: 2000 }} 2000w,{%- endif -%}
+            {{ fallback_image | image_url }} {{ fallback_image.width }}w
+          "
+          sizes="100vw"
+          width="{{ fallback_image.width }}"
+          height="{{ fallback_image.height }}"
+          alt="{{ fallback_image.alt | escape }}"
+          class="health-categories__image"
+          style="object-position: {{ s.focal_point | replace: '-', ' ' }};"
+          loading="lazy"
+        >
+      </picture>
+      <div class="health-categories__overlay"></div>
+    </div>
+  {%- else -%}
+    {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg health-categories__image' }}
+  {%- endif -%}
+
+  <div class="health-categories__inner page-width">
+    <ul class="health-categories__list list-unstyled" role="list">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.name != blank -%}
+          <li class="health-categories__item" {{ block.shopify_attributes }}>
+            <a
+              {% if block.settings.link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ block.settings.link }}"
+              {% endif %}
+              class="health-categories__link{% if block.settings.bold %} health-categories__link--bold{% endif %}{% if block.settings.underline %} health-categories__link--underline{% endif %}"
+            >
+              {{ block.settings.name | escape }}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Health Categories",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image",
+      "info": "Used on desktop and tablet. Also used on mobile if no mobile image is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Shown only below 750px wide. Falls back to the desktop image if left blank."
+    },
+    {
+      "type": "select",
+      "id": "focal_point",
+      "label": "Image position",
+      "info": "Which part of the photo stays in frame when it crops.",
+      "options": [
+        { "value": "left-top", "label": "Top left" },
+        { "value": "center-top", "label": "Top center" },
+        { "value": "right-top", "label": "Top right" },
+        { "value": "left-center", "label": "Middle left" },
+        { "value": "center-center", "label": "Middle center" },
+        { "value": "right-center", "label": "Middle right" },
+        { "value": "left-bottom", "label": "Bottom left" },
+        { "value": "center-bottom", "label": "Bottom center" },
+        { "value": "right-bottom", "label": "Bottom right" }
+      ],
+      "default": "center-center"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "info": "Darkens the image so the white text stays readable.",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 200,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "label": "Section height",
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Section height, mobile",
+      "default": 300
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Category name",
+          "default": "Category"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Category link"
+        },
+        {
+          "type": "checkbox",
+          "id": "bold",
+          "label": "Bold",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "underline",
+          "label": "Underline",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Health Categories",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": { "name": "Family Health", "bold": true, "underline": true }
+        },
+        {
+          "type": "category",
+          "settings": { "name": "Heart Health" }
+        },
+        {
+          "type": "category",
+          "settings": { "name": "Probiotics Health" }
+        },
+        {
+          "type": "category",
+          "settings": { "name": "Women's Health" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

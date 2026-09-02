@@ -929,3 +929,115 @@ a.tmarquee__text:focus-visible {
     font-size: 1.5rem;
   }
 }
+
+/* ------------------------------------------------------------
+   Health Categories — sections/health-categories.liquid
+   ------------------------------------------------------------ */
+.health-categories {
+  position: relative;
+  display: flex;
+  min-height: var(--health-categories-height, 300px);
+  overflow: hidden;
+}
+
+.health-categories__media {
+  position: absolute;
+  inset: 0;
+}
+
+.health-categories__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.health-categories__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--health-categories-overlay, rgba(0, 0, 0, 0.25));
+}
+
+.health-categories__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-height: var(--health-categories-height, 300px);
+  align-items: center;
+  justify-content: center;
+}
+
+.health-categories--align-left .health-categories__inner {
+  justify-content: flex-start;
+}
+
+.health-categories--align-right .health-categories__inner {
+  justify-content: flex-end;
+}
+
+.health-categories__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  text-align: center;
+}
+
+.health-categories--align-left .health-categories__list {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.health-categories--align-right .health-categories__list {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.health-categories__link {
+  color: rgb(var(--color-foreground));
+  font-size: 1.8rem;
+  font-weight: 400;
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+.health-categories__link:hover {
+  text-decoration: underline;
+}
+
+.health-categories__link--bold {
+  font-weight: 700;
+}
+
+.health-categories__link--underline {
+  text-decoration: underline;
+}
+
+.health-categories--text-small .health-categories__link {
+  font-size: 1.5rem;
+}
+
+.health-categories--text-large .health-categories__link {
+  font-size: 2.2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .health-categories__list {
+    align-items: center;
+    text-align: center;
+    gap: 0.9rem;
+  }
+
+  .health-categories__link {
+    font-size: 1.5rem;
+  }
+
+  .health-categories--text-small .health-categories__link {
+    font-size: 1.3rem;
+  }
+
+  .health-categories--text-large .health-categories__link {
+    font-size: 1.8rem;
+  }
+}

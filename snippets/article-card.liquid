@@ -10,6 +10,8 @@
   - show_date: {String} The setting either show the article date or not. If it's not included it will not show the image by default
   - show_author: {String} The setting either show the article author or not. If it's not included it will not show the author by default
   - show_badge: {String} The setting either show the blog badge or not.
+  - show_read_more: {Boolean} Show the "Read more" button below the excerpt. Default: follows show_excerpt (optional)
+  - read_more_label: {String} Label for the "Read more" button (optional)
   - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
 
   Usage:
@@ -22,7 +24,37 @@
     if media_aspect_ratio != null
       assign ratio = media_aspect_ratio
     endif
+
+    assign show_read_more_button = show_read_more
+    if show_read_more == nil
+      assign show_read_more_button = show_excerpt
+    endif
+
+    assign read_more_text = read_more_label | default: 'Read more'
   -%}
+
+  {%- capture read_more_button -%}
+    {%- if show_read_more_button and article.url != blank -%}
+      <a
+        href="{{ article.url }}"
+        class="article-card__read-more blog-card__button"
+        aria-label="{{ 'blogs.article.read_more_title' | t: title: article.title }}"
+      >
+        <span>{{ read_more_text }}</span>
+        <svg class="blog-card__button-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path
+            d="M1 8h13M9 3l5 5-5 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    {%- endif -%}
+  {%- endcapture -%}
+
   <div class="article-card-wrapper card-wrapper underline-links-hover">
     {% comment %} <article aria-labelledby="Article-{{ article.id }}"> {% endcomment %}
     <div
@@ -103,24 +135,8 @@
                   <span>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
                 {%- endif -%}
               </div>
-              <a
-                href="{{ article.url }}"
-                class="article-card__read-more blog-card__button"
-                aria-label="{{ 'blogs.article.read_more_title' | t: title: article.title }}"
-              >
-                <span>Read more</span>
-                <svg class="blog-card__button-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                  <path
-                    d="M1 8h13M9 3l5 5-5 5"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
             {%- endif -%}
+            {{ read_more_button }}
           </div>
           {%- if show_badge -%}
             <div class="card__badge {{ settings.badge_position }}">
@@ -160,6 +176,7 @@
               {%- endif -%}
             </div>
           {%- endif -%}
+          {{ read_more_button }}
         </div>
         {%- if show_badge -%}
           <div class="card__badge {{ settings.badge_position }}">

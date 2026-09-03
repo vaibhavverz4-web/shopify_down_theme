@@ -31,6 +31,7 @@
         "brand_information_kkyYqj": {
           "type": "brand_information",
           "settings": {
+            "heading": "Follow us",
             "show_social": true
           }
         }
@@ -44,6 +45,7 @@
         "color_scheme": "scheme-1",
         "newsletter_enable": true,
         "newsletter_heading": "Subscribe to our emails",
+        "newsletter_description": "<p>Be the first to know about our biggest and best sales.</p>",
         "enable_follow_on_shop": true,
         "show_social": false,
         "enable_country_selector": true,

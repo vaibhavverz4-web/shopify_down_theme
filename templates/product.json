@@ -186,8 +186,8 @@
           "settings": {
             "label": "Benefits",
             "use_description": false,
-            "content": "{{ product.metafields.custom.tab_benefits | metafield_tag }}",
-            "image": "{{ product.metafields.custom.tab_benefits_image.value }}"
+            "content": "",
+            "image": ""
           }
         },
         "tab_LmDNyr": {
@@ -240,14 +240,14 @@
         "heading_8QenLj": {
           "type": "heading",
           "settings": {
-            "heading": "{{ product.metafields.custom.banner_latest.value.heading.value }}",
+            "heading": "",
             "heading_size": "h1"
           }
         },
         "text_cdywCK": {
           "type": "text",
           "settings": {
-            "text": "<p>{{ product.metafields.custom.banner_latest.value.description | metafield_tag }}</p>",
+            "text": "",
             "text_style": "body"
           }
         },
@@ -267,7 +267,7 @@
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "{{ product.metafields.custom.banner_latest.value.image.value }}",
+        "image": "",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",

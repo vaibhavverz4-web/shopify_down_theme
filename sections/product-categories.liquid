@@ -1,0 +1,262 @@
+{%- comment -%}
+  Product Categories — new custom section
+  Path: sections/product-categories.liquid
+
+  Centered heading above a row of dashed-circle category links (one per
+  block): white circle, dashed ring, line-art icon, name below. 6 per row
+  on desktop, 3 on tablet, 2 on mobile.
+  Static CSS lives in assets/custom.css (class prefix: product-categories__).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+-%}
+
+{%- style -%}
+  #ProductCategories-{{ uid }} {
+    --product-categories-bg: {{ s.background_color }};
+    --product-categories-heading-color: {{ s.heading_color }};
+    --product-categories-circle-bg: {{ s.circle_background_color }};
+    --product-categories-border-color: {{ s.circle_border_color }};
+    --product-categories-icon-color: {{ s.icon_color }};
+    --product-categories-name-color: {{ s.name_color }};
+    --product-categories-circle-size: {{ s.circle_size }}px;
+    --product-categories-gap: {{ s.item_spacing }}px;
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #ProductCategories-{{ uid }} {
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div id="ProductCategories-{{ uid }}" class="product-categories">
+  <div class="product-categories__inner page-width">
+    {%- if s.heading != blank -%}
+      <h2 class="product-categories__heading">{{ s.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="product-categories__grid list-unstyled" role="list">
+        {%- for block in section.blocks -%}
+          <li class="product-categories__item" {{ block.shopify_attributes }}>
+            <a
+              class="product-categories__link"
+              {% if block.settings.link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ block.settings.link }}"
+              {% endif %}
+            >
+              <span class="product-categories__circle">
+                <span class="product-categories__circle-inner">
+                  {%- if block.settings.icon_image != blank -%}
+                    <img
+                      src="{{ block.settings.icon_image | image_url: width: 160 }}"
+                      alt=""
+                      width="{{ block.settings.icon_image.width }}"
+                      height="{{ block.settings.icon_image.height }}"
+                      class="product-categories__icon-image"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    <span class="product-categories__icon" aria-hidden="true">
+                      {%- case block.settings.icon -%}
+                        {%- when 'healthcare' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8h8v10h10v8H28v10h-8V26H10v-8h10V8z"/></svg>
+                        {%- when 'mom-baby' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 6h10v6H19z"/><path d="M18 12h12l2 4v20a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4V16z"/><path d="M15 24h18"/></svg>
+                        {%- when 'home-living' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22 24 8l16 14"/><path d="M12 20v18h24V20"/><path d="M20 38V28h8v10"/></svg>
+                        {%- when 'food-beverage' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 18h22v10a11 11 0 0 1-11 11 11 11 0 0 1-11-11z"/><path d="M32 20h4a5 5 0 0 1 0 10h-4"/><path d="M17 8c0 2-2 2-2 4M25 8c0 2-2 2-2 4"/></svg>
+                        {%- when 'beauty' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 44h12V26H18z"/><path d="M18 26l2-14h8l2 14"/><path d="M20 12V6h8v6"/></svg>
+                        {%- when 'pets' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="31" r="9"/><circle cx="11" cy="17" r="4.5"/><circle cx="24" cy="10" r="4.5"/><circle cx="37" cy="17" r="4.5"/></svg>
+                        {%- when 'star' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6l5.5 12 13 1.6-9.8 9 2.7 13-11.4-6.6-11.4 6.6 2.7-13-9.8-9 13-1.6z"/></svg>
+                        {%- when 'gift' -%}
+                          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="18" width="32" height="9"/><rect x="10" y="27" width="28" height="13"/><path d="M24 18v22"/><path d="M24 18c-3-8-14-8-14-1 0 3 4 1 14 1zM24 18c3-8 14-8 14-1 0 3-4 1-14 1z"/></svg>
+                      {%- endcase -%}
+                    </span>
+                  {%- endif -%}
+                </span>
+              </span>
+              {%- if block.settings.name != blank -%}
+                <span class="product-categories__name">{{ block.settings.name | escape }}</span>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Categories",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Discover Our Products"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#E9F5FC"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "circle_background_color",
+      "label": "Circle background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "circle_border_color",
+      "label": "Dashed border color",
+      "default": "#AFDCF2"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Category name color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "circle_size",
+      "min": 70,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Circle size",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 8,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing between items",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Category name",
+          "default": "Category"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "healthcare", "label": "Healthcare" },
+            { "value": "mom-baby", "label": "Mom & Baby" },
+            { "value": "home-living", "label": "Home & Living" },
+            { "value": "food-beverage", "label": "Food & Beverage" },
+            { "value": "beauty", "label": "Beauty" },
+            { "value": "pets", "label": "Pets" },
+            { "value": "star", "label": "Star" },
+            { "value": "gift", "label": "Gift" }
+          ],
+          "default": "star",
+          "info": "Used unless a custom icon image is uploaded below."
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Custom icon (optional)",
+          "info": "Overrides the icon selected above."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Category link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Categories",
+      "blocks": [
+        { "type": "category", "settings": { "name": "Healthcare", "icon": "healthcare" } },
+        { "type": "category", "settings": { "name": "Mom & Baby", "icon": "mom-baby" } },
+        { "type": "category", "settings": { "name": "Home & Living", "icon": "home-living" } },
+        { "type": "category", "settings": { "name": "Food & Beverage", "icon": "food-beverage" } },
+        { "type": "category", "settings": { "name": "Beauty", "icon": "beauty" } },
+        { "type": "category", "settings": { "name": "Pets", "icon": "pets" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

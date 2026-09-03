@@ -1664,3 +1664,120 @@ a.tmarquee__text:focus-visible {
     animation: none;
   }
 }
+
+/* Product Categories — sections/product-categories.liquid */
+.product-categories {
+  background: var(--product-categories-bg);
+}
+
+.product-categories__inner {
+  text-align: center;
+}
+
+.product-categories__heading {
+  margin: 0 0 3.2rem;
+  color: var(--product-categories-heading-color);
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  font-size: calc(var(--font-heading-scale) * 2.6rem);
+  line-height: 1.2;
+}
+
+.product-categories__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--product-categories-gap) calc(var(--product-categories-gap) * 0.6);
+  margin: 0;
+  padding: 0;
+}
+
+.product-categories__item {
+  display: flex;
+}
+
+.product-categories__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-categories__link[aria-disabled='true'] {
+  cursor: default;
+}
+
+.product-categories__circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--product-categories-circle-size);
+  height: var(--product-categories-circle-size);
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 2px dashed var(--product-categories-border-color);
+  padding: 0.8rem;
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+}
+
+.product-categories__link:hover .product-categories__circle {
+  transform: translateY(-4px);
+}
+
+.product-categories__circle-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--product-categories-circle-bg);
+  box-shadow: 0 0.4rem 1.4rem rgba(0, 0, 0, 0.06);
+}
+
+.product-categories__icon {
+  display: flex;
+  width: 42%;
+  height: 42%;
+  color: var(--product-categories-icon-color);
+}
+
+.product-categories__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.product-categories__icon-image {
+  width: 42%;
+  height: 42%;
+  object-fit: contain;
+}
+
+.product-categories__name {
+  margin-top: 1.2rem;
+  color: var(--product-categories-name-color);
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+@media screen and (min-width: 750px) {
+  .product-categories__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .product-categories__grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-categories__link:hover .product-categories__circle {
+    transform: none;
+  }
+}

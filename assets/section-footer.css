@@ -488,6 +488,157 @@
   }
 }
 
+/* ------------------------------------------------------------
+   Footer refinements to match the approved reference design.
+   Scoped to .footer / .footer-block so nothing here can leak
+   into the other sections that share these component classes
+   (component-newsletter.css is also used by email-signup-banner
+   and the standalone newsletter section).
+   ------------------------------------------------------------ */
+@media screen and (min-width: 750px) {
+  .footer-block--menu ul.footer-block__details-content {
+    column-count: 2;
+    column-gap: 2.4rem;
+  }
+}
+
+.footer-block__newsletter-description {
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+.footer-block__newsletter-description p {
+  margin: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .footer-block__newsletter-description {
+    text-align: left;
+  }
+}
+
+/* Newsletter button: from an icon overlaid inside the input to a
+   separate, labeled button below it (footer-only; the shared
+   .newsletter-form__button styling used elsewhere is untouched). */
+.footer .newsletter-form__field-wrapper .field__input {
+  padding-right: 1.7rem;
+}
+
+.footer .newsletter-form__button {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: auto;
+  height: auto;
+  margin-top: 1.2rem;
+  padding: 1.2rem 2.4rem;
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  border-radius: 0.2rem;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  transition:
+    background-color var(--duration-short) ease,
+    color var(--duration-short) ease;
+}
+
+.footer .newsletter-form__button:hover {
+  background-color: rgb(var(--color-button-hover));
+  color: rgb(var(--color-button-text-hover));
+}
+
+.footer .newsletter-form__button .icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* Place the Newsletter block beside the link/Follow-us columns instead
+   of stacked below them. In stock Dawn, .footer__blocks-wrapper (the
+   grid of section.blocks) and .footer-block--newsletter are separate
+   block-level siblings inside .footer__content-top, so they stack
+   vertically by default — this puts them in one row on desktop only. */
+@media screen and (min-width: 750px) {
+  .footer__content-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 4rem;
+  }
+
+  .footer__content-top .footer__blocks-wrapper {
+    flex: 1 1 auto;
+    margin-bottom: 0;
+  }
+
+  .footer__content-top .footer-block--newsletter {
+    flex: 0 0 32rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 0;
+    gap: 1.5rem;
+  }
+
+  .footer-block--newsletter .footer-block__newsletter {
+    text-align: left;
+    width: 100%;
+    flex-grow: 0;
+  }
+
+  .footer-block--newsletter .newsletter-form {
+    align-items: flex-start;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+  }
+}
+
+/* Bottom row: stack the currency/language selector directly above the
+   copyright line on the left, with payment icons on the right — desktop
+   only; the existing mobile stacked layout above is untouched. */
+@media screen and (min-width: 750px) {
+  .footer__content-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    column-gap: 2rem;
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 3rem 5rem 0;
+  }
+
+  .footer__content-bottom-wrapper {
+    display: contents;
+  }
+
+  .footer__localization {
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: flex-start;
+    padding: 0.4rem 0 0;
+  }
+
+  .footer__column--info {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .footer__content-bottom .footer__copyright {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    margin-top: 0.8rem;
+  }
+}
+
 /* check for flexbox gap in older Safari versions */
 @supports not (inset: 10px) {
   @media screen and (max-width: 749px) {

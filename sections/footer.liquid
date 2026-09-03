@@ -170,6 +170,9 @@
               {%- if section.settings.newsletter_heading != blank -%}
                 <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
               {%- endif -%}
+              {%- if section.settings.newsletter_description != blank -%}
+                <div class="footer-block__newsletter-description rte">{{ section.settings.newsletter_description }}</div>
+              {%- endif -%}
               {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
                 <input type="hidden" name="contact[tags]" value="newsletter">
                 <div class="newsletter-form__field-wrapper">
@@ -204,6 +207,7 @@
                       id="Subscribe"
                       aria-label="{{ 'newsletter.button_label' | t }}"
                     >
+                      <span class="newsletter-form__button-text">{{ 'newsletter.button_label' | t }}</span>
                       <span class="svg-wrapper">
                         {{- 'icon-arrow.svg' | inline_asset_content -}}
                       </span>
@@ -351,6 +355,13 @@
       "name": "t:sections.footer.blocks.brand_information.name",
       "settings": [
         {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Follow us",
+          "info": "Shown above the social icons."
+        },
+        {
           "type": "paragraph",
           "content": "t:sections.footer.blocks.brand_information.settings.paragraph.content"
         },
@@ -446,6 +457,12 @@
       "id": "newsletter_heading",
       "default": "t:sections.footer.settings.newsletter_heading.default",
       "label": "t:sections.footer.settings.newsletter_heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_description",
+      "label": "Newsletter description",
+      "default": "<p>Be the first to know about our biggest and best sales.</p>"
     },
     {
       "type": "header",

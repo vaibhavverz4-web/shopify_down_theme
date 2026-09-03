@@ -28,25 +28,24 @@
             "menu": "footer"
           }
         },
-        "link_list_XaCy4D": {
-          "type": "link_list",
+        "brand_information_kkyYqj": {
+          "type": "brand_information",
           "settings": {
-            "heading": "Quick links",
-            "menu": "footer"
+            "show_social": true
           }
         }
       },
       "block_order": [
         "link_list_nPzc78",
         "link_list_TV9TUK",
-        "link_list_XaCy4D"
+        "brand_information_kkyYqj"
       ],
       "settings": {
         "color_scheme": "scheme-1",
         "newsletter_enable": true,
         "newsletter_heading": "Subscribe to our emails",
         "enable_follow_on_shop": true,
-        "show_social": true,
+        "show_social": false,
         "enable_country_selector": true,
         "enable_language_selector": true,
         "payment_enable": true,

@@ -238,6 +238,25 @@
           "link_hover": "#025c2f",
           "shadow": "#121212"
         }
+      },
+      "scheme-aa172d23-d4de-4f98-bd0b-f8dc090d29fb": {
+        "settings": {
+          "background": "#ffffff",
+          "background_gradient": "",
+          "text": "#242424",
+          "heading": "#242424",
+          "subheading": "#027a3e",
+          "description": "#242424",
+          "button": "#C9B487",
+          "button_label": "#C9B487",
+          "button_hover": "#C9B487",
+          "button_label_hover": "#ffffff",
+          "secondary_button_label": "#121212",
+          "star": "#ffb800",
+          "link": "#1e24cf",
+          "link_hover": "#025c2f",
+          "shadow": "#121212"
+        }
       }
     }
   },

@@ -103,6 +103,23 @@
                   <span>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
                 {%- endif -%}
               </div>
+              <a
+                href="{{ article.url }}"
+                class="article-card__read-more blog-card__button"
+                aria-label="{{ 'blogs.article.read_more_title' | t: title: article.title }}"
+              >
+                <span>Read more</span>
+                <svg class="blog-card__button-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <path
+                    d="M1 8h13M9 3l5 5-5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
             {%- endif -%}
           </div>
           {%- if show_badge -%}

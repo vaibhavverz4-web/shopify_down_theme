@@ -1,0 +1,330 @@
+{%- comment -%}
+  Elegant Feature Cards — new custom section
+  Path: sections/elegant-feature-cards.liquid
+
+  Centered heading/subheading above a row of equal-width cards (one per
+  block): landscape image, large serif heading, centered description, and
+  an outlined/solid "Discover" button. Desktop/mobile image fallback and
+  the blank-link handling follow the same patterns used by every other
+  custom section built this session.
+  Static CSS lives in assets/custom.css (class prefix: elegant-card__).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+-%}
+
+{%- style -%}
+  #ElegantCards-{{ uid }} {
+    --elegant-cards-gap: {{ s.card_gap }}px;
+    padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #ElegantCards-{{ uid }} {
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="ElegantCards-{{ uid }}"
+  class="elegant-cards color-{{ s.color_scheme }} gradient elegant-cards--align-{{ s.text_alignment }}"
+>
+  <div class="elegant-cards__inner page-width">
+    {%- if s.heading != blank or s.subheading != blank -%}
+      <div class="elegant-cards__header">
+        {%- if s.heading != blank -%}
+          <h2 class="elegant-cards__heading">{{ s.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if s.subheading != blank -%}
+          <p class="elegant-cards__subheading">{{ s.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul
+        class="elegant-cards__grid list-unstyled elegant-cards__grid--desktop-{{ s.columns_desktop }} elegant-cards__grid--mobile-{{ s.columns_mobile }}"
+        role="list"
+      >
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign fallback_image = block.settings.image | default: block.settings.image_mobile
+            assign card_link = block.settings.button_link
+          -%}
+          <li class="elegant-card elegant-card--ratio-{{ s.image_ratio }}" {{ block.shopify_attributes }}>
+            <a
+              class="elegant-card__media"
+              {% if card_link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ card_link }}"
+              {% endif %}
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              {%- if fallback_image != blank -%}
+                <picture>
+                  {%- if block.settings.image_mobile != blank -%}
+                    <source
+                      media="(max-width: 749px)"
+                      srcset="
+                        {%- if block.settings.image_mobile.width >= 375 -%}{{ block.settings.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
+                        {%- if block.settings.image_mobile.width >= 550 -%}{{ block.settings.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
+                        {%- if block.settings.image_mobile.width >= 750 -%}{{ block.settings.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
+                        {{ block.settings.image_mobile | image_url }} {{ block.settings.image_mobile.width }}w
+                      "
+                    >
+                  {%- endif -%}
+                  <img
+                    src="{{ fallback_image | image_url: width: 800 }}"
+                    srcset="
+                      {%- if fallback_image.width >= 400 -%}{{ fallback_image | image_url: width: 400 }} 400w,{%- endif -%}
+                      {%- if fallback_image.width >= 600 -%}{{ fallback_image | image_url: width: 600 }} 600w,{%- endif -%}
+                      {%- if fallback_image.width >= 800 -%}{{ fallback_image | image_url: width: 800 }} 800w,{%- endif -%}
+                      {{ fallback_image | image_url }} {{ fallback_image.width }}w
+                    "
+                    sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
+                    width="{{ fallback_image.width }}"
+                    height="{{ fallback_image.height }}"
+                    alt="{{ block.settings.heading | escape }}"
+                    class="elegant-card__image"
+                    loading="lazy"
+                  >
+                </picture>
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg elegant-card__image' }}
+              {%- endif -%}
+            </a>
+
+            <div class="elegant-card__content">
+              {%- if block.settings.heading != blank -%}
+                <h3 class="elegant-card__heading">
+                  {%- if card_link != blank -%}
+                    <a href="{{ card_link }}">{{ block.settings.heading | escape }}</a>
+                  {%- else -%}
+                    {{ block.settings.heading | escape }}
+                  {%- endif -%}
+                </h3>
+              {%- endif -%}
+
+              {%- if block.settings.description != blank -%}
+                <p class="elegant-card__description">{{ block.settings.description | escape }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.button_text != blank -%}
+                <a
+                  class="elegant-card__button elegant-card__button--{{ s.button_style }}"
+                  {% if card_link == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ card_link }}"
+                  {% endif %}
+                >
+                  <span>{{ block.settings.button_text | escape }}</span>
+                </a>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Elegant Feature Cards",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "The House of Diamond2"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Featured"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "landscape", "label": "Landscape (16:9)" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (3:4)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "outline", "label": "Outline" },
+        { "value": "solid", "label": "Solid" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Card gap",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Desktop columns",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 1,
+      "label": "Mobile columns",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Also used on mobile if no mobile image is set."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image",
+          "info": "Optional. Shown only below 750px wide. Falls back to the main image if left blank."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Describe this card."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Discover"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Elegant Feature Cards",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "heading": "High Jewellery",
+            "description": "Step into a world of exceptional brilliance as Diamond2 unveils its most breathtaking high jewellery creations.",
+            "button_text": "Discover"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "heading": "Book an Appointment",
+            "description": "Experience Diamond2 jewellery in person. Discover extraordinary craftsmanship and personal service at your nearest boutique.",
+            "button_text": "Discover"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "heading": "Bridal Guides",
+            "description": "At Diamond2, every journey begins with the diamond. Explore our expert guides and discover what sets our bridal pieces apart.",
+            "button_text": "Discover"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

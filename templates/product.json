@@ -287,7 +287,6 @@
       "blocks": {
         "column_dAE7yg": {
           "type": "column",
-          "repeater": "{{ product.metafields.custom.multiple_colum_set.value }}",
           "settings": {
             "link": ""
           }

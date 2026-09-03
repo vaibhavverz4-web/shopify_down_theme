@@ -1,8 +1,8 @@
 /* iWish wishlist icon on product grid */
+
 .card-wrapper {
   position: relative;
 }
-
 
 a.button {
     display: none;
@@ -29,6 +29,15 @@ a.button {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
+/* Whole-card link (snippets/card-product.liquid, .full-width-link) sits at
+   z-index: 2 so clicking anywhere on the card opens the product page. The
+   wishlist button already sits above it (z-index: 20); quick-add controls
+   need the same treatment so they stay clickable instead of being covered. */
+.card-wrapper .quick-add,
+.card-wrapper quick-add-bulk {
+  position: relative;
+  z-index: 3;
+}
 
 /* ===== iWish wishlist icon in header ===== */
 
@@ -50,6 +59,7 @@ a.button {
 }
 
 /* Heart icon - SVG background તરીકે */
+
 .iwish-header-link .iwishPage::before {
   content: "";
   display: block;
@@ -67,6 +77,7 @@ a.button {
 }
 
 /* Counter bubble */
+
 .iwish-header-link .iwish-counter {
   position: absolute;
   top: 0.5rem;
@@ -82,7 +93,9 @@ a.button {
   border-radius: 100%;
   background-color: rgb(var(--color-button));
   color: rgb(var(--color-button-text));
-}/* ==========================================================================
+}
+
+/* ==========================================================================
    TRIANON HERO
    Variables (--thero-*) are set per section in sections/trianon-hero.liquid
    Type tokens (--type-*) come from Theme settings > Typography > Type scale
@@ -101,6 +114,7 @@ a.button {
 /* ---------- Media ---------- */
 
 /* Media and content occupy the same grid cell, so they stack. */
+
 .thero__media {
   grid-column: 1;
   grid-row: 1;
@@ -426,71 +440,6 @@ a.button {
   transition-delay: calc(var(--thero-item-index, 0) * 90ms);
 }
 
-/* ---------- Mobile ---------- */
-
-@media screen and (max-width: 749px) {
-  .thero--has-mobile-image .thero__image--desktop {
-    display: none;
-  }
-
-  .thero--has-mobile-image .thero__image--mobile {
-    display: block;
-  }
-
-  .thero__inner {
-    align-items: flex-end;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-
-  .thero--faded::before,
-  .thero--align-right.thero--faded::before,
-  .thero--align-center.thero--faded::before {
-    background: linear-gradient(
-      to bottom,
-      rgba(var(--thero-bg), 0) 0%,
-      rgba(var(--thero-bg), calc(var(--thero-fade) * 0.85)) 42%,
-      rgba(var(--thero-bg), var(--thero-fade)) 100%
-    );
-  }
-
-  .thero__content {
-    text-align: left;
-  }
-
-  .thero__text {
-    margin-top: 1.4rem;
-  }
-
-  .thero__usps {
-    gap: 1.8rem;
-  }
-
-  .thero__button {
-    padding: 1rem 2.6rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .thero__button {
-    transition: none;
-  }
-
-  .thero__text a {
-    transition: none;
-  }
-
-  .thero[data-thero-animate] [data-thero-item] {
-    opacity: 1;
-    transform: none;
-  }
-
-  .thero[data-thero-animate].thero--ready [data-thero-item] {
-    transition: none;
-    transition-delay: 0s;
-  }
-}
-
 /* ==========================================================================
    TRIANON MARQUEE
    Variables (--tmq-*) are set per section in sections/trianon-marquee.liquid
@@ -538,6 +487,7 @@ a.button {
 }
 
 /* Separator sits in the gap after each item. */
+
 .tmarquee__item::after {
   content: '';
   position: absolute;
@@ -593,33 +543,13 @@ a.tmarquee__text:focus-visible {
 
 /* One list is exactly one loop, so shifting by 100% of a single list
    makes the repeat seamless regardless of how many copies are rendered. */
+
 @keyframes tmarquee-scroll {
   from {
     transform: translateX(0);
   }
   to {
     transform: translateX(calc(-100% / var(--tmq-copies, 8)));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tmarquee__track {
-    animation: none;
-    width: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .tmarquee__track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .tmarquee__list[aria-hidden='true'] {
-    display: none;
-  }
-
-  a.tmarquee__text {
-    transition: none;
   }
 }
 
@@ -631,6 +561,7 @@ a.tmarquee__text:focus-visible {
    affected. !important guards against the WPD pricing app's
    own inline price styling.
    ------------------------------------------------------------ */
+
 .card-information .price--on-sale .price-item--regular {
   text-decoration: line-through !important;
   color: rgba(var(--color-foreground), 0.6) !important;
@@ -644,6 +575,7 @@ a.tmarquee__text:focus-visible {
 /* ------------------------------------------------------------
    CTA Banner — sections/cta-banner.liquid
    ------------------------------------------------------------ */
+
 .cta-banner {
   position: relative;
   display: flex;
@@ -781,28 +713,10 @@ a.tmarquee__text:focus-visible {
   flex-shrink: 0;
 }
 
-@media screen and (max-width: 749px) {
-  .cta-banner__content {
-    padding: 1.5rem 2rem;
-  }
-
-  .cta-banner__heading {
-    font-size: clamp(2.4rem, 8vw, 3.2rem);
-  }
-
-  .cta-banner__description {
-    font-size: 1.4rem;
-  }
-
-  .cta-banner__button {
-    padding: 1.1rem 2rem;
-    font-size: 1.3rem;
-  }
-}
-
 /* ------------------------------------------------------------
    Glass Image + Text — sections/glass-image-text.liquid
    ------------------------------------------------------------ */
+
 .glass-feature {
   position: relative;
   overflow: hidden;
@@ -907,32 +821,10 @@ a.tmarquee__text:focus-visible {
   margin: 0;
 }
 
-@media screen and (min-width: 750px) {
-  .glass-feature__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-  }
-
-  .glass-feature--image-right .glass-feature__media {
-    order: 2;
-  }
-
-  .glass-feature--image-right .glass-feature__content {
-    order: 1;
-  }
-
-  .glass-feature__heading {
-    font-size: clamp(2.6rem, 2.5vw + 1.6rem, 3.8rem);
-  }
-
-  .glass-feature__description {
-    font-size: 1.5rem;
-  }
-}
-
 /* ------------------------------------------------------------
    Health Categories — sections/health-categories.liquid
    ------------------------------------------------------------ */
+
 .health-categories {
   position: relative;
   display: flex;
@@ -1022,29 +914,10 @@ a.tmarquee__text:focus-visible {
   font-size: 2.2rem;
 }
 
-@media screen and (max-width: 749px) {
-  .health-categories__list {
-    align-items: center;
-    text-align: center;
-    gap: 0.9rem;
-  }
-
-  .health-categories__link {
-    font-size: 1.5rem;
-  }
-
-  .health-categories--text-small .health-categories__link {
-    font-size: 1.3rem;
-  }
-
-  .health-categories--text-large .health-categories__link {
-    font-size: 1.8rem;
-  }
-}
-
 /* ------------------------------------------------------------
    Testimonial Scroll — sections/testimonial-scroll.liquid
    ------------------------------------------------------------ */
+
 .testimonial-scroll__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1160,42 +1033,10 @@ a.tmarquee__text:focus-visible {
   color: rgba(var(--color-foreground), 0.3);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .testimonial-scroll__track {
-    animation: none;
-  }
-}
-
-@media screen and (min-width: 750px) {
-  .testimonial-scroll__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-  }
-}
-
-@media screen and (max-width: 749px) {
-  .testimonial-scroll__viewport {
-    max-height: 34rem;
-  }
-
-  .testimonial-card {
-    padding: 1.6rem 1.8rem;
-  }
-
-  .testimonial-scroll__heading {
-    text-align: center;
-  }
-
-  .testimonial-scroll__description {
-    max-width: none;
-    text-align: center;
-    margin: 0 auto;
-  }
-}
-
 /* ------------------------------------------------------------
    Promo Banner Cards — sections/promo-banner-cards.liquid
    ------------------------------------------------------------ */
+
 .promo-cards__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1271,30 +1112,10 @@ a.tmarquee__text:focus-visible {
   text-align: right;
 }
 
-@media screen and (min-width: 750px) {
-  .promo-cards__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media screen and (max-width: 749px) {
-  .promo-card {
-    aspect-ratio: 4 / 3;
-  }
-
-  .promo-card__content {
-    padding: 1.6rem 2rem;
-  }
-
-  .promo-card__heading {
-    max-width: 75%;
-    font-size: 1.5rem;
-  }
-}
-
 /* ------------------------------------------------------------
    From The Blog — sections/from-the-blog.liquid
    ------------------------------------------------------------ */
+
 .from-the-blog__heading {
   margin: 0 0 2.4rem;
   font-family: var(--font-heading-family);
@@ -1420,30 +1241,6 @@ a.tmarquee__text:focus-visible {
   flex-shrink: 0;
 }
 
-@media screen and (min-width: 750px) {
-  .from-the-blog__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media screen and (min-width: 990px) {
-  .from-the-blog__grid--desktop-1 {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .from-the-blog__grid--desktop-2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .from-the-blog__grid--desktop-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .from-the-blog__grid--desktop-4 {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 /* ------------------------------------------------------------
    Elegant Feature Cards — sections/elegant-feature-cards.liquid
 
@@ -1452,6 +1249,7 @@ a.tmarquee__text:focus-visible {
    editorial look regardless of what sans-serif is set in
    Theme Settings > Typography.
    ------------------------------------------------------------ */
+
 .elegant-cards__header {
   max-width: 64rem;
   margin: 0 auto 4.8rem;
@@ -1614,13 +1412,199 @@ a.tmarquee__text:focus-visible {
   color: rgb(var(--color-button-text-hover));
 }
 
+/* ------------------------------------------------------------
+   Article card "Read more" button — snippets/article-card.liquid
+   Reuses .blog-card__button (defined above, for the From The Blog
+   section) so this matches it exactly; only the spacing above the
+   button needs its own rule since this snippet isn't a flex column,
+   so .blog-card__button's own `margin-top: auto` has nothing to push
+   against here.
+   ------------------------------------------------------------ */
+
+.article-card__read-more {
+  margin-top: 1.4rem;
+}
+
+@media screen and (max-width: 749px) {
+  /* ---------- Mobile ---------- */
+
+  .thero--has-mobile-image .thero__image--desktop {
+    display: none;
+  }
+
+  .thero--has-mobile-image .thero__image--mobile {
+    display: block;
+  }
+
+  .thero__inner {
+    align-items: flex-end;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .thero--faded::before,
+  .thero--align-right.thero--faded::before,
+  .thero--align-center.thero--faded::before {
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--thero-bg), 0) 0%,
+      rgba(var(--thero-bg), calc(var(--thero-fade) * 0.85)) 42%,
+      rgba(var(--thero-bg), var(--thero-fade)) 100%
+    );
+  }
+
+  .thero__content {
+    text-align: left;
+  }
+
+  .thero__text {
+    margin-top: 1.4rem;
+  }
+
+  .thero__usps {
+    gap: 1.8rem;
+  }
+
+  .thero__button {
+    padding: 1rem 2.6rem;
+  }
+
+  .cta-banner__content {
+    padding: 1.5rem 2rem;
+  }
+
+  .cta-banner__heading {
+    font-size: clamp(2.4rem, 8vw, 3.2rem);
+  }
+
+  .cta-banner__description {
+    font-size: 1.4rem;
+  }
+
+  .cta-banner__button {
+    padding: 1.1rem 2rem;
+    font-size: 1.3rem;
+  }
+
+  .health-categories__list {
+    align-items: center;
+    text-align: center;
+    gap: 0.9rem;
+  }
+
+  .health-categories__link {
+    font-size: 1.5rem;
+  }
+
+  .health-categories--text-small .health-categories__link {
+    font-size: 1.3rem;
+  }
+
+  .health-categories--text-large .health-categories__link {
+    font-size: 1.8rem;
+  }
+
+  .testimonial-scroll__viewport {
+    max-height: 34rem;
+  }
+
+  .testimonial-card {
+    padding: 1.6rem 1.8rem;
+  }
+
+  .testimonial-scroll__heading {
+    text-align: center;
+  }
+
+  .testimonial-scroll__description {
+    max-width: none;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .promo-card {
+    aspect-ratio: 4 / 3;
+  }
+
+  .promo-card__content {
+    padding: 1.6rem 2rem;
+  }
+
+  .promo-card__heading {
+    max-width: 75%;
+    font-size: 1.5rem;
+  }
+
+  .elegant-cards__header {
+    margin-bottom: 3.2rem;
+  }
+
+  .elegant-card__heading {
+    font-size: 2rem;
+  }
+
+  .elegant-card__description {
+    font-size: 1.3rem;
+  }
+}
+
 @media screen and (min-width: 750px) {
+  .glass-feature__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+  }
+
+  .glass-feature--image-right .glass-feature__media {
+    order: 2;
+  }
+
+  .glass-feature--image-right .glass-feature__content {
+    order: 1;
+  }
+
+  .glass-feature__heading {
+    font-size: clamp(2.6rem, 2.5vw + 1.6rem, 3.8rem);
+  }
+
+  .glass-feature__description {
+    font-size: 1.5rem;
+  }
+
+  .testimonial-scroll__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+  }
+
+  .promo-cards__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .from-the-blog__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .elegant-cards__grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media screen and (min-width: 990px) {
+  .from-the-blog__grid--desktop-1 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .from-the-blog__grid--desktop-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .from-the-blog__grid--desktop-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .from-the-blog__grid--desktop-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .elegant-cards__grid--desktop-1 {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -1638,28 +1622,45 @@ a.tmarquee__text:focus-visible {
   }
 }
 
-@media screen and (max-width: 749px) {
-  .elegant-cards__header {
-    margin-bottom: 3.2rem;
+@media (prefers-reduced-motion: reduce) {
+  .thero__button {
+    transition: none;
   }
 
-  .elegant-card__heading {
-    font-size: 2rem;
+  .thero__text a {
+    transition: none;
   }
 
-  .elegant-card__description {
-    font-size: 1.3rem;
+  .thero[data-thero-animate] [data-thero-item] {
+    opacity: 1;
+    transform: none;
   }
-}
 
-/* ------------------------------------------------------------
-   Article card "Read more" button — snippets/article-card.liquid
-   Reuses .blog-card__button (defined above, for the From The Blog
-   section) so this matches it exactly; only the spacing above the
-   button needs its own rule since this snippet isn't a flex column,
-   so .blog-card__button's own `margin-top: auto` has nothing to push
-   against here.
-   ------------------------------------------------------------ */
-.article-card__read-more {
-  margin-top: 1.4rem;
+  .thero[data-thero-animate].thero--ready [data-thero-item] {
+    transition: none;
+    transition-delay: 0s;
+  }
+
+  .tmarquee__track {
+    animation: none;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tmarquee__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tmarquee__list[aria-hidden='true'] {
+    display: none;
+  }
+
+  a.tmarquee__text {
+    transition: none;
+  }
+
+  .testimonial-scroll__track {
+    animation: none;
+  }
 }

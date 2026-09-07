@@ -317,7 +317,8 @@
       "type": "custom-banner",
       "name": "Custom Banner",
       "settings": {
-        "color_scheme": "",
+        "color_scheme": "scheme-2",
+        "image": "shopify://shop_images/mg_md.jpg",
         "overlay_opacity": 20,
         "heading": "Introducing our new banner",
         "heading_size": "h1",

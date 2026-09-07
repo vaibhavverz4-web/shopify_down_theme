@@ -33,10 +33,10 @@
   {%- endstyle -%}
 
   <div class="metaobject-feature">
-    {%- if show_image != false and metaobject.image != blank -%}
+    {%- if show_image != false and metaobject.image.value != blank -%}
       <div class="metaobject-feature__image">
         {{
-          metaobject.image
+          metaobject.image.value
           | image_url: width: 200
           | image_tag: loading: 'lazy', widths: '100, 200', alt: metaobject.title
         }}
@@ -49,14 +49,14 @@
         <h3 class="metaobject-feature__title h4">{{ feature_title | escape }}</h3>
       {%- endif -%}
 
-      {%- if metaobject.description != blank -%}
+      {%- if metaobject.description.value != blank -%}
         <div class="metaobject-feature__description rte">
-          {{ metaobject.description | newline_to_br }}
+          {{ metaobject.description.value | newline_to_br }}
         </div>
       {%- endif -%}
 
-      {%- if metaobject.link != blank -%}
-        <a href="{{ metaobject.link }}" class="link metaobject-feature__link">
+      {%- if metaobject.link.value != blank -%}
+        <a href="{{ metaobject.link.value }}" class="link metaobject-feature__link">
           {{ link_label | default: 'Learn more' | escape }}
         </a>
       {%- endif -%}

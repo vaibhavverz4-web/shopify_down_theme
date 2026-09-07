@@ -19,9 +19,12 @@
 {%- style -%}
   #CustomBanner-{{ uid }} {
     --custom-banner-height: {{ s.height_mobile }}px;
-    --custom-banner-overlay-opacity: {{ overlay_alpha }};
     padding-top: {{ s.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ s.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  #CustomBanner-{{ uid }} .custom-banner__overlay {
+    opacity: {{ overlay_alpha }};
   }
 
   @media screen and (min-width: 750px) {

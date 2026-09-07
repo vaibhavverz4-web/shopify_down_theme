@@ -21,14 +21,6 @@
   assign uid = section.id
   assign content = product.metafields.custom.product_content.value
   assign text_width = 100 | minus: s.image_width
-  assign alt_1 = product.title
-  assign alt_2 = product.title
-  if content.heading_1.value != blank
-    assign alt_1 = content.heading_1.value
-  endif
-  if content.heading_2.value != blank
-    assign alt_2 = content.heading_2.value
-  endif
 -%}
 
 {%- if content != blank -%}
@@ -69,21 +61,13 @@
               <h2 class="product-content__heading {{ s.heading_size }}">{{ content.heading_1.value | escape }}</h2>
             {%- endif -%}
             {%- if content.description_1.value != blank -%}
-              <div class="product-content__description rte">{{ content.description_1.value }}</div>
+              <div class="product-content__description rte">{{ content.description_1 | metafield_tag }}</div>
             {%- endif -%}
           </div>
 
           {%- if content.image_1.value != blank -%}
             <div class="product-content__media">
-              {{
-                content.image_1.value
-                | image_url: width: 1500
-                | image_tag:
-                  loading: 'lazy',
-                  alt: alt_1,
-                  sizes: '(min-width: 750px) 50vw, 100vw',
-                  widths: '400, 600, 800, 1000, 1200, 1500'
-              }}
+              {{ content.image_1 | metafield_tag }}
             </div>
           {%- endif -%}
         </div>
@@ -93,15 +77,7 @@
         <div class="product-content__row product-content__row--2">
           {%- if content.image_2.value != blank -%}
             <div class="product-content__media">
-              {{
-                content.image_2.value
-                | image_url: width: 1500
-                | image_tag:
-                  loading: 'lazy',
-                  alt: alt_2,
-                  sizes: '(min-width: 750px) 50vw, 100vw',
-                  widths: '400, 600, 800, 1000, 1200, 1500'
-              }}
+              {{ content.image_2 | metafield_tag }}
             </div>
           {%- endif -%}
 
@@ -110,7 +86,7 @@
               <h2 class="product-content__heading {{ s.heading_size }}">{{ content.heading_2.value | escape }}</h2>
             {%- endif -%}
             {%- if content.description_2.value != blank -%}
-              <div class="product-content__description rte">{{ content.description_2.value }}</div>
+              <div class="product-content__description rte">{{ content.description_2 | metafield_tag }}</div>
             {%- endif -%}
           </div>
         </div>

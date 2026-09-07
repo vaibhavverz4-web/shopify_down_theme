@@ -141,7 +141,7 @@
           "settings": {
             "label": "How to Apply",
             "use_description": false,
-            "content": ""
+            "content": "{{ product.metafields.custom.product_tabs.value.how_to_apply | metafield_tag }}"
           }
         },
         "tab_kxkPHG": {

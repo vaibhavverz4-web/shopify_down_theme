@@ -126,8 +126,7 @@
             "label": "Benefits",
             "use_description": false,
             "metaobject_field": "benefits",
-            "content": "",
-            "image": ""
+            "content": ""
           }
         },
         "tab_LmDNyr": {
@@ -209,7 +208,6 @@
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
@@ -223,37 +221,6 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
-    },
-    "multicolumn_CfyCdE": {
-      "type": "multicolumn",
-      "blocks": {
-        "column_dAE7yg": {
-          "type": "column",
-          "settings": {
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "column_dAE7yg"
-      ],
-      "name": "t:sections.multicolumn.presets.name",
-      "settings": {
-        "title": "Multicolumn",
-        "heading_size": "h1",
-        "image_width": "full",
-        "image_ratio": "adapt",
-        "button_label": "Button label",
-        "button_link": "",
-        "columns_desktop": 3,
-        "column_alignment": "left",
-        "background_style": "primary",
-        "color_scheme": "",
-        "columns_mobile": "1",
-        "swipe_on_mobile": false,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
     }
   },
   "order": [
@@ -261,7 +228,6 @@
     "17865031324580f9cf",
     "related-products",
     "product_tabs_M7BPVr",
-    "image_with_text_wy4fwP",
-    "multicolumn_CfyCdE"
+    "image_with_text_wy4fwP"
   ]
 }

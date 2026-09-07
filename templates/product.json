@@ -132,7 +132,7 @@
           "type": "tab",
           "settings": {
             "label": "Benefits",
-            "use_description": false,
+            "use_description": true,
             "content": "{{ product.metafields.custom.product_tabs.value.benefits | metafield_tag }}"
           }
         },
@@ -140,7 +140,7 @@
           "type": "tab",
           "settings": {
             "label": "How to Apply",
-            "use_description": false,
+            "use_description": true,
             "content": "{{ product.metafields.custom.product_tabs.value.how_to_apply | metafield_tag }}"
           }
         },
@@ -148,8 +148,8 @@
           "type": "tab",
           "settings": {
             "label": "Ingredients",
-            "use_description": false,
-            "content": ""
+            "use_description": true,
+            "content": "{{ product.metafields.custom.product_tabs.value.ingredients | metafield_tag }}"
           }
         }
       },

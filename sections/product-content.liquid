@@ -1,0 +1,242 @@
+{%- comment -%}
+  Product Content — new custom section
+  Path: sections/product-content.liquid
+
+  Reads the current product's "Product Content" metaobject
+  (product.metafields.custom.product_content.value) and renders it as two
+  alternating image/text rows:
+    Row 1: text left, image right
+    Row 2: image left, text right
+  Stacks vertically (image above text) below 750px.
+  Only renders when the product has a Product Content metaobject assigned.
+  Static CSS lives in assets/section-product-content.css (class prefix: product-content__).
+
+  This section is separate from, and does not modify, sections/product-tabs.liquid.
+{%- endcomment -%}
+
+{{ 'section-product-content.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign content = product.metafields.custom.product_content.value
+  assign text_width = 100 | minus: s.image_width
+  assign alt_1 = product.title
+  assign alt_2 = product.title
+  if content.heading_1.value != blank
+    assign alt_1 = content.heading_1.value
+  endif
+  if content.heading_2.value != blank
+    assign alt_2 = content.heading_2.value
+  endif
+-%}
+
+{%- if content != blank -%}
+  {%- style -%}
+    #ProductContent-{{ uid }} {
+      padding-top: {{ s.padding_top }}px;
+      padding-bottom: {{ s.padding_bottom }}px;
+      --product-content-row-gap: {{ s.row_gap }}px;
+      --product-content-column-gap: {{ s.column_gap }}px;
+    }
+
+    #ProductContent-{{ uid }} .product-content__description {
+      font-size: {{ s.description_size }}px;
+      line-height: 1.7;
+    }
+
+    @media screen and (min-width: 750px) {
+      #ProductContent-{{ uid }} .product-content__row--1 {
+        grid-template-columns: {{ text_width }}fr {{ s.image_width }}fr;
+      }
+
+      #ProductContent-{{ uid }} .product-content__row--2 {
+        grid-template-columns: {{ s.image_width }}fr {{ text_width }}fr;
+      }
+    }
+  {%- endstyle -%}
+
+  <div
+    id="ProductContent-{{ uid }}"
+    class="product-content color-{{ s.color_scheme }} gradient product-content--align-{{ s.text_alignment }}"
+  >
+    <div class="product-content__inner page-width">
+
+      {%- if content.heading_1.value != blank or content.description_1.value != blank or content.image_1.value != blank -%}
+        <div class="product-content__row product-content__row--1">
+          <div class="product-content__text">
+            {%- if content.heading_1.value != blank -%}
+              <h2 class="product-content__heading {{ s.heading_size }}">{{ content.heading_1.value | escape }}</h2>
+            {%- endif -%}
+            {%- if content.description_1.value != blank -%}
+              <div class="product-content__description rte">{{ content.description_1.value }}</div>
+            {%- endif -%}
+          </div>
+
+          {%- if content.image_1.value != blank -%}
+            <div class="product-content__media">
+              {{
+                content.image_1.value
+                | image_url: width: 1500
+                | image_tag:
+                  loading: 'lazy',
+                  alt: alt_1,
+                  sizes: '(min-width: 750px) 50vw, 100vw',
+                  widths: '400, 600, 800, 1000, 1200, 1500'
+              }}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if content.heading_2.value != blank or content.description_2.value != blank or content.image_2.value != blank -%}
+        <div class="product-content__row product-content__row--2">
+          {%- if content.image_2.value != blank -%}
+            <div class="product-content__media">
+              {{
+                content.image_2.value
+                | image_url: width: 1500
+                | image_tag:
+                  loading: 'lazy',
+                  alt: alt_2,
+                  sizes: '(min-width: 750px) 50vw, 100vw',
+                  widths: '400, 600, 800, 1000, 1200, 1500'
+              }}
+            </div>
+          {%- endif -%}
+
+          <div class="product-content__text">
+            {%- if content.heading_2.value != blank -%}
+              <h2 class="product-content__heading {{ s.heading_size }}">{{ content.heading_2.value | escape }}</h2>
+            {%- endif -%}
+            {%- if content.description_2.value != blank -%}
+              <div class="product-content__description rte">{{ content.description_2.value }}</div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Content",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "label": "Image width",
+      "info": "Desktop only. Controls how much of each row the image takes up.",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between text and image",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "min": 16,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between rows",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.all.heading_size.label",
+      "options": [
+        { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
+        { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
+        { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Content"
+    }
+  ]
+}
+{% endschema %}

@@ -319,7 +319,7 @@
       "settings": {
         "color_scheme": "scheme-5",
         "image": "shopify://shop_images/mg_md.jpg",
-        "overlay_opacity": 100,
+        "overlay_opacity": 60,
         "heading": "Introducing our new banner",
         "heading_size": "h1",
         "description": "<p>Share details about this banner, a product, or a promotion with your customers.</p>",

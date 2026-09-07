@@ -27,6 +27,14 @@
           "type": "price",
           "settings": {}
         },
+        "metaobject_feature_Fpk6yY": {
+          "type": "metaobject_feature",
+          "settings": {
+            "heading": "",
+            "show_image": true,
+            "link_label": "Learn more"
+          }
+        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -60,6 +68,7 @@
         "vendor",
         "title",
         "price",
+        "metaobject_feature_Fpk6yY",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",

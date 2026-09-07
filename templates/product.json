@@ -125,7 +125,7 @@
           "settings": {
             "label": "Description",
             "use_description": true,
-            "content": ""
+            "content": "{{ product.metafields.custom.product_tabs.value.description | metafield_tag }}"
           }
         },
         "tab_9j7478": {

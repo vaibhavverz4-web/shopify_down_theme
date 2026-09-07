@@ -132,15 +132,15 @@
 
   for block in section.blocks
     assign has_content = false
-    assign metaobject_value = blank
+    assign metaobject_field_value = blank
 
     if block.settings.metaobject_field != blank and tabs_metaobject
-      assign metaobject_value = tabs_metaobject[block.settings.metaobject_field].value
+      assign metaobject_field_value = tabs_metaobject[block.settings.metaobject_field]
     endif
 
     if block.settings.use_description and product.description != blank
       assign has_content = true
-    elsif metaobject_value != blank
+    elsif metaobject_field_value.value != blank
       assign has_content = true
     elsif block.settings.content != blank
       assign has_content = true
@@ -191,7 +191,10 @@
           if block.settings.use_description
             assign body = product.description
           elsif block.settings.metaobject_field != blank and tabs_metaobject
-            assign body = tabs_metaobject[block.settings.metaobject_field].value
+            assign metaobject_field_value = tabs_metaobject[block.settings.metaobject_field]
+            if metaobject_field_value.value != blank
+              assign body = metaobject_field_value | metafield_tag
+            endif
           endif
 
           if body == blank

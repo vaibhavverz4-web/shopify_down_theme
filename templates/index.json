@@ -331,6 +331,36 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "value_proposition_nXWzRJ": {
+      "type": "value-proposition",
+      "name": "Value Proposition",
+      "settings": {
+        "eyebrow": "Value Proposition",
+        "heading": "What Makes Us Unique",
+        "description": "<p>Share what sets your brand apart — quality, service, and the details that keep customers coming back.</p>",
+        "main_image": "shopify://shop_images/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg",
+        "image_alt": "",
+        "image_width": 380,
+        "block_1_icon": "shopify://shop_images/mg_md.jpg",
+        "block_1_heading": "Premium Quality",
+        "block_1_description": "Every product is crafted with care and tested for lasting quality.",
+        "block_2_icon": "shopify://shop_images/CNY_Web_Push_2026_3.webp",
+        "block_2_heading": "Fast Shipping",
+        "block_2_description": "Quick, reliable delivery so you get what you need, when you need it.",
+        "block_3_icon": "shopify://shop_images/8262a723d5de7f0f5e8493f6c32cb2ed25030538.jpg",
+        "block_3_heading": "Trusted by Thousands",
+        "block_3_description": "Loved by a growing community of happy, repeat customers.",
+        "block_4_icon": "shopify://shop_images/replicate-prediction-srm8wm5aw9rma0cse4b8vhwrnw.jpg_2x_9b0b7db0-21cc-45c9-bd69-08ee3670fc10.jpg",
+        "block_4_heading": "Dedicated Support",
+        "block_4_description": "Our team is here to help before and after every purchase.",
+        "background_color": "#ffffff",
+        "accent_color": "#2f6b4f",
+        "heading_size": "h1",
+        "description_size": 16,
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
     }
   },
   "order": [
@@ -342,6 +372,7 @@
     "testimonial_scroll_MFN7yt",
     "promo_banner_cards_fQzGTg",
     "featured_blog_MUnTkd",
-    "custom_banner_HeJPkd"
+    "custom_banner_HeJPkd",
+    "value_proposition_nXWzRJ"
   ]
 }

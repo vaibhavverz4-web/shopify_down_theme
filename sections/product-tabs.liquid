@@ -128,11 +128,19 @@
 
 {%- liquid
   assign visible = ''
+  assign tabs_metaobject = product.metafields.custom.product_tabs.value
 
   for block in section.blocks
     assign has_content = false
+    assign metaobject_value = blank
+
+    if block.settings.metaobject_field != blank and tabs_metaobject
+      assign metaobject_value = tabs_metaobject[block.settings.metaobject_field].value
+    endif
 
     if block.settings.use_description and product.description != blank
+      assign has_content = true
+    elsif metaobject_value != blank
       assign has_content = true
     elsif block.settings.content != blank
       assign has_content = true
@@ -178,9 +186,15 @@
         {%- endunless -%}
 
         {%- liquid
+          assign body = blank
+
           if block.settings.use_description
             assign body = product.description
-          else
+          elsif block.settings.metaobject_field != blank and tabs_metaobject
+            assign body = tabs_metaobject[block.settings.metaobject_field].value
+          endif
+
+          if body == blank
             assign body = block.settings.content
           endif
 
@@ -283,14 +297,28 @@
           "type": "checkbox",
           "id": "use_description",
           "label": "Use product description",
-          "info": "ON karo to niche nu Content ignore thashe.",
+          "info": "ON karo to niche nu Content ane Product Tabs metaobject banne ignore thashe.",
           "default": false
+        },
+        {
+          "type": "select",
+          "id": "metaobject_field",
+          "label": "Product Tabs metaobject field",
+          "info": "Product na \"custom.product_tabs\" metafield sathe connected metaobject entry ma thi aa field nu content batavo.",
+          "options": [
+            { "value": "", "label": "None (use manual content below)" },
+            { "value": "description", "label": "Description" },
+            { "value": "benefits", "label": "Benefits" },
+            { "value": "how_to_apply", "label": "How to Apply" },
+            { "value": "ingredients", "label": "Ingredients" }
+          ],
+          "default": ""
         },
         {
           "type": "richtext",
           "id": "content",
           "label": "Content",
-          "info": "Metafield sathe connect karva mate label ni baju na database icon pr click karo."
+          "info": "Metaobject field khali hoy tyare aa manual content fallback tarike batashe."
         },
         {
           "type": "image_picker",
@@ -495,11 +523,20 @@
       "blocks": [
         {
           "type": "tab",
-          "settings": { "label": "Description", "use_description": true }
+          "settings": { "label": "Description", "metaobject_field": "description" }
         },
-        { "type": "tab", "settings": { "label": "Benefits" } },
-        { "type": "tab", "settings": { "label": "How to Apply" } },
-        { "type": "tab", "settings": { "label": "Ingredients" } }
+        {
+          "type": "tab",
+          "settings": { "label": "Benefits", "metaobject_field": "benefits" }
+        },
+        {
+          "type": "tab",
+          "settings": { "label": "How to Apply", "metaobject_field": "how_to_apply" }
+        },
+        {
+          "type": "tab",
+          "settings": { "label": "Ingredients", "metaobject_field": "ingredients" }
+        }
       ]
     }
   ]

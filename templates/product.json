@@ -27,14 +27,6 @@
           "type": "price",
           "settings": {}
         },
-        "metaobject_feature_Fpk6yY": {
-          "type": "metaobject_feature",
-          "settings": {
-            "heading": "",
-            "show_image": true,
-            "link_label": "Learn more"
-          }
-        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -68,7 +60,6 @@
         "vendor",
         "title",
         "price",
-        "metaobject_feature_Fpk6yY",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
@@ -125,7 +116,7 @@
           "settings": {
             "label": "Description",
             "use_description": false,
-            "content": "{{ product.metafields.custom.product_tabs.value.description | metafield_tag }}"
+            "content": ""
           }
         },
         "tab_9j7478": {
@@ -133,7 +124,8 @@
           "settings": {
             "label": "Benefits",
             "use_description": false,
-            "content": "{{ product.metafields.custom.product_tabs.value.benefits | metafield_tag }}"
+            "content": "",
+            "image": ""
           }
         },
         "tab_LmDNyr": {
@@ -141,7 +133,7 @@
           "settings": {
             "label": "How to Apply",
             "use_description": false,
-            "content": "{{ product.metafields.custom.product_tabs.value.how_to_apply | metafield_tag }}"
+            "content": ""
           }
         },
         "tab_kxkPHG": {
@@ -149,7 +141,7 @@
           "settings": {
             "label": "Ingredients",
             "use_description": false,
-            "content": "{{ product.metafields.custom.product_tabs.value.ingredients | metafield_tag }}"
+            "content": ""
           }
         }
       },
@@ -180,19 +172,83 @@
         "aria_label": "Product information"
       }
     },
-    "product_content_XxB6Kx": {
-      "type": "product-content",
-      "name": "Product Content",
+    "image_with_text_wy4fwP": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_8QenLj": {
+          "type": "heading",
+          "settings": {
+            "heading": "",
+            "heading_size": "h1"
+          }
+        },
+        "text_cdywCK": {
+          "type": "text",
+          "settings": {
+            "text": "",
+            "text_style": "body"
+          }
+        },
+        "button_QfipFV": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_8QenLj",
+        "text_cdywCK",
+        "button_QfipFV"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
       "settings": {
+        "image": "",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
         "color_scheme": "",
-        "image_width": 50,
-        "text_alignment": "center",
-        "column_gap": 64,
-        "row_gap": 80,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "multicolumn_CfyCdE": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_dAE7yg": {
+          "type": "column",
+          "settings": {
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_dAE7yg"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "title": "Multicolumn",
         "heading_size": "h1",
-        "description_size": 16,
-        "padding_top": 64,
-        "padding_bottom": 64
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "button_label": "Button label",
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     }
   },
@@ -201,6 +257,7 @@
     "17865031324580f9cf",
     "related-products",
     "product_tabs_M7BPVr",
-    "product_content_XxB6Kx"
+    "image_with_text_wy4fwP",
+    "multicolumn_CfyCdE"
   ]
 }

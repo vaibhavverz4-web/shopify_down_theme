@@ -312,6 +312,24 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "custom_banner_HeJPkd": {
+      "type": "custom-banner",
+      "name": "Custom Banner",
+      "settings": {
+        "color_scheme": "",
+        "overlay_opacity": 20,
+        "heading": "Introducing our new banner",
+        "heading_size": "h1",
+        "description": "<p>Share details about this banner, a product, or a promotion with your customers.</p>",
+        "text_alignment": "center",
+        "button_label": "Shop now",
+        "button_link": "#",
+        "height": 550,
+        "height_mobile": 420,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
   "order": [
@@ -322,6 +340,7 @@
     "glass_image_text_paK6Y7",
     "testimonial_scroll_MFN7yt",
     "promo_banner_cards_fQzGTg",
-    "featured_blog_MUnTkd"
+    "featured_blog_MUnTkd",
+    "custom_banner_HeJPkd"
   ]
 }

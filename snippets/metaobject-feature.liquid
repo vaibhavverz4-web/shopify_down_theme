@@ -1,0 +1,65 @@
+{%- comment -%}
+  Renders a "Product Feature" metaobject (title, description, image, link).
+  Accepts:
+  - metaobject: {Object} required — the metaobject reference to render
+  - heading: {String} optional — overrides the metaobject's own title field
+  - link_label: {String} optional — link text, defaults to the metaobject title
+  - show_image: {Boolean} optional — default true
+{%- endcomment -%}
+
+{%- if metaobject != blank -%}
+  {%- style -%}
+    .metaobject-feature {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    .metaobject-feature__image {
+      flex-shrink: 0;
+      width: 6rem;
+    }
+    .metaobject-feature__image img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: var(--media-radius, 0);
+    }
+    .metaobject-feature__title {
+      margin: 0 0 0.5rem;
+    }
+    .metaobject-feature__description {
+      margin: 0;
+    }
+  {%- endstyle -%}
+
+  <div class="metaobject-feature">
+    {%- if show_image != false and metaobject.image != blank -%}
+      <div class="metaobject-feature__image">
+        {{
+          metaobject.image
+          | image_url: width: 200
+          | image_tag: loading: 'lazy', widths: '100, 200', alt: metaobject.title
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="metaobject-feature__content">
+      {%- assign feature_title = heading | default: metaobject.title -%}
+      {%- if feature_title != blank -%}
+        <h3 class="metaobject-feature__title h4">{{ feature_title | escape }}</h3>
+      {%- endif -%}
+
+      {%- if metaobject.description != blank -%}
+        <div class="metaobject-feature__description rte">
+          {{ metaobject.description | newline_to_br }}
+        </div>
+      {%- endif -%}
+
+      {%- if metaobject.link != blank -%}
+        <a href="{{ metaobject.link }}" class="link metaobject-feature__link">
+          {{ link_label | default: 'Learn more' | escape }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

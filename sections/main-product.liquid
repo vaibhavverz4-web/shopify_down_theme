@@ -688,6 +688,22 @@
                   </product-recommendations>
                 {%- when 'icon-with-text' -%}
                   {% render 'icon-with-text', block: block %}
+                {%- when 'metaobject_feature' -%}
+                  {%- assign feature_metaobject = product.metafields.custom.product_feature.value -%}
+                  {%- if feature_metaobject -%}
+                    <div class="product__metaobject-feature quick-add-hidden" {{ block.shopify_attributes }}>
+                      {%- render 'metaobject-feature',
+                        metaobject: feature_metaobject,
+                        heading: block.settings.heading,
+                        link_label: block.settings.link_label,
+                        show_image: block.settings.show_image
+                      -%}
+                    </div>
+                  {%- elsif request.design_mode -%}
+                    <p class="product__metaobject-feature-placeholder quick-add-hidden" {{ block.shopify_attributes }}>
+                      No "Product Feature" metaobject is connected to this product yet. Add one from the product's Metafields section in the Shopify admin.
+                    </p>
+                  {%- endif -%}
               {%- endcase -%}
             {%- endfor -%}
             <a href="{{ product.url }}" class="link product__view-details animate-arrow">
@@ -2142,6 +2158,35 @@
           "default": "t:sections.main-product.blocks.icon_with_text.settings.heading_3.default",
           "label": "t:sections.main-product.blocks.icon_with_text.settings.heading_3.label",
           "info": "t:sections.main-product.blocks.icon_with_text.settings.heading.info"
+        }
+      ]
+    },
+    {
+      "type": "metaobject_feature",
+      "name": "Product feature",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Displays the metaobject connected via the product's \"custom.product_feature\" metafield. Connect an entry from the product's Metafields section in the Shopify admin."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "info": "Leave blank to use the metaobject's own title field."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_image",
+          "default": true,
+          "label": "Show image"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link text",
+          "default": "Learn more"
         }
       ]
     }

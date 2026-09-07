@@ -124,8 +124,7 @@
           "settings": {
             "label": "Benefits",
             "use_description": false,
-            "content": "",
-            "image": ""
+            "content": ""
           }
         },
         "tab_LmDNyr": {
@@ -171,93 +170,12 @@
         "padding_bottom": 64,
         "aria_label": "Product information"
       }
-    },
-    "image_with_text_wy4fwP": {
-      "type": "image-with-text",
-      "blocks": {
-        "heading_8QenLj": {
-          "type": "heading",
-          "settings": {
-            "heading": "",
-            "heading_size": "h1"
-          }
-        },
-        "text_cdywCK": {
-          "type": "text",
-          "settings": {
-            "text": "",
-            "text_style": "body"
-          }
-        },
-        "button_QfipFV": {
-          "type": "button",
-          "settings": {
-            "button_label": "Button label",
-            "button_link": "",
-            "button_style_secondary": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_8QenLj",
-        "text_cdywCK",
-        "button_QfipFV"
-      ],
-      "name": "t:sections.image-with-text.presets.name",
-      "settings": {
-        "image": "",
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "image_first",
-        "image_behavior": "none",
-        "content_layout": "no-overlap",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "mobile_content_alignment": "left",
-        "section_color_scheme": "",
-        "color_scheme": "",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "multicolumn_CfyCdE": {
-      "type": "multicolumn",
-      "blocks": {
-        "column_dAE7yg": {
-          "type": "column",
-          "settings": {
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "column_dAE7yg"
-      ],
-      "name": "t:sections.multicolumn.presets.name",
-      "settings": {
-        "title": "Multicolumn",
-        "heading_size": "h1",
-        "image_width": "full",
-        "image_ratio": "adapt",
-        "button_label": "Button label",
-        "button_link": "",
-        "columns_desktop": 3,
-        "column_alignment": "left",
-        "background_style": "primary",
-        "color_scheme": "",
-        "columns_mobile": "1",
-        "swipe_on_mobile": false,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
     }
   },
   "order": [
     "main",
     "17865031324580f9cf",
     "related-products",
-    "product_tabs_M7BPVr",
-    "image_with_text_wy4fwP",
-    "multicolumn_CfyCdE"
+    "product_tabs_M7BPVr"
   ]
 }

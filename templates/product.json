@@ -179,12 +179,28 @@
         "padding_bottom": 64,
         "aria_label": "Product information"
       }
+    },
+    "product_content_XxB6Kx": {
+      "type": "product-content",
+      "name": "Product Content",
+      "settings": {
+        "color_scheme": "",
+        "image_width": 50,
+        "text_alignment": "center",
+        "column_gap": 64,
+        "row_gap": 80,
+        "heading_size": "h1",
+        "description_size": 16,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
     }
   },
   "order": [
     "main",
     "17865031324580f9cf",
     "related-products",
-    "product_tabs_M7BPVr"
+    "product_tabs_M7BPVr",
+    "product_content_XxB6Kx"
   ]
 }

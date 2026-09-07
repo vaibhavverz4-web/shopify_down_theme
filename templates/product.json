@@ -133,7 +133,7 @@
           "settings": {
             "label": "Benefits",
             "use_description": false,
-            "content": ""
+            "content": "{{ product.metafields.custom.product_tabs.value.benefits | metafield_tag }}"
           }
         },
         "tab_LmDNyr": {

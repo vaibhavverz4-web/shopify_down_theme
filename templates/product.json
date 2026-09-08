@@ -174,12 +174,38 @@
         "padding_bottom": 64,
         "aria_label": "Product information"
       }
+    },
+    "value_proposition_BaaL6G": {
+      "type": "value-proposition",
+      "name": "Value Proposition",
+      "settings": {
+        "eyebrow": "Value Proposition",
+        "heading": "What Makes Us Unique",
+        "description": "<p>Share what sets your brand apart — quality, service, and the details that keep customers coming back.</p>",
+        "image_alt": "",
+        "image_width": 380,
+        "block_1_heading": "Premium Quality",
+        "block_1_description": "Every product is crafted with care and tested for lasting quality.",
+        "block_2_heading": "Fast Shipping",
+        "block_2_description": "Quick, reliable delivery so you get what you need, when you need it.",
+        "block_3_heading": "Trusted by Thousands",
+        "block_3_description": "Loved by a growing community of happy, repeat customers.",
+        "block_4_heading": "Dedicated Support",
+        "block_4_description": "Our team is here to help before and after every purchase.",
+        "background_color": "#ffffff",
+        "accent_color": "#2f6b4f",
+        "heading_size": "h1",
+        "description_size": 16,
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
     }
   },
   "order": [
     "main",
     "17865031324580f9cf",
     "related-products",
-    "product_tabs_M7BPVr"
+    "product_tabs_M7BPVr",
+    "value_proposition_BaaL6G"
   ]
 }

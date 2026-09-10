@@ -1,7 +1,36 @@
+{%- comment -%}
+  Mst: Wishlist Prime (iwish) integration links.
+
+  'wishlist-drawer-link' / 'wishlist-page-link' render the header wishlist
+  icon + live counter (used by sections/header.liquid) — the app's globally
+  loaded script (activated wherever the app's "apps > v3-app-block-list"
+  block is present, see templates/*.json) finds these by class and keeps
+  the counter in sync.
+
+  'list-product' / 'single-product' are the app's older manual-button class
+  hooks (iWishAddColl / iWishAdd). They are currently unused: the app's own
+  "v3-app-block-list" app block already auto-injects a top-right wishlist
+  heart on every product card image on the collection/index/search/product
+  templates, so rendering these here too would duplicate that icon. Keep
+  these branches only as a documented fallback if that app block is ever
+  removed.
+{%- endcomment -%}
 {% if linkType == 'wishlist-drawer-link' %}
-  <a class="iwishDrawer header__icon small-hide" href="#" title="Wishlist">Wishlist <span class="iwish-counter">0</span></a>
+  <a href="#" class="iwishDrawer header__icon header__icon--wishlist link focus-inset" title="Wishlist">
+    <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+    <span class="visually-hidden">Wishlist</span>
+    <span class="iwish-counter">0</span>
+  </a>
 {% elsif linkType == 'wishlist-page-link' %}
-  <a class="iwishPage header__icon small-hide" href="{% unless routes.root_url == '/' %}{{ routes.root_url }}{% endunless %}/apps/iwish" title="Wishlist">Wishlist <span class="iwish-counter">0</span></a>
+  <a
+    href="{% unless routes.root_url == '/' %}{{ routes.root_url }}{% endunless %}/apps/iwish"
+    class="iwishPage header__icon header__icon--wishlist link focus-inset"
+    title="Wishlist"
+  >
+    <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+    <span class="visually-hidden">Wishlist</span>
+    <span class="iwish-counter">0</span>
+  </a>
 {% elsif linkType == 'list-product' %}
   <a class="iWishAddColl iwishcheck" href="#" data-variant="{{ product.variants.first.id }}" data-product="{{ product.id }}" data-pTitle="{{ product.title | escape }}"></a>
 {% elsif linkType == 'single-product' %}

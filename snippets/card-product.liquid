@@ -56,14 +56,13 @@
     <div class="card-wrapper product-card-wrapper underline-links-hover">
 
       {%- comment -%}
-        iWish wishlist button.
-        Placed here (outside .card) so Dawn's full-card overlay link cannot block the click.
+        The Mst: Wishlist Prime "v3-app-block-list" app block (added to the
+        apps section on the collection, index, search and product templates)
+        auto-injects its own top-right wishlist heart onto every product card
+        image on those pages. Do not also render a manual wishlist button
+        here — this snippet is shared by every one of those templates, so a
+        second button here would duplicate the app's own icon on each card.
       {%- endcomment -%}
-      {%- if card_product.featured_media -%}
-        <div class="iwish-grid-btn">
-          {% render 'wishlist-app-links', linkType: 'list-product', product: card_product %}
-        </div>
-      {%- endif -%}
 
       <div
         class="

@@ -84,7 +84,32 @@
     },
     "17865031324580f9cf": {
       "type": "apps",
-      "disabled": true,
+      "blocks": {
+        "mst_wishlist_prime_v3_app_block_list_product01": {
+          "type": "shopify://apps/mst-wishlist-prime/blocks/v3-app-block-list/7f9269b0-1b45-4d0c-8479-faf04f05d8ac",
+          "settings": {
+            "multi_language": true,
+            "iwish_add_txt": "Add To Wishlist",
+            "iwish_added_txt": "Added To Wishlist",
+            "theme_btn_class": "",
+            "icon_position": "top-right",
+            "icon_style": "heart",
+            "iwish_add_icon_outline": "",
+            "iwish_added_icon_filled": "",
+            "text_font_size": 14,
+            "text_color": "#000000",
+            "text_color_hover": "",
+            "background_color": "#ffffff",
+            "z_index": 2,
+            "qv_wrapper": "",
+            "qv_button": "",
+            "qv_close_button": ""
+          }
+        }
+      },
+      "block_order": [
+        "mst_wishlist_prime_v3_app_block_list_product01"
+      ],
       "settings": {
         "include_margins": true
       }

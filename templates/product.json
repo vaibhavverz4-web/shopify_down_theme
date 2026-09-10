@@ -126,7 +126,8 @@
             "label": "Benefits",
             "use_description": false,
             "metaobject_field": "benefits",
-            "content": ""
+            "content": "",
+            "image": ""
           }
         },
         "tab_LmDNyr": {

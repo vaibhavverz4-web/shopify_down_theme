@@ -14,20 +14,6 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "link_list_nPzc78": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Quick links",
-            "menu": "quick-links"
-          }
-        },
-        "link_list_TV9TUK": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Quick links",
-            "menu": "other-info"
-          }
-        },
         "brand_information_kkyYqj": {
           "type": "brand_information",
           "settings": {
@@ -37,12 +23,14 @@
         }
       },
       "block_order": [
-        "link_list_nPzc78",
-        "link_list_TV9TUK",
         "brand_information_kkyYqj"
       ],
       "settings": {
         "color_scheme": "scheme-4",
+        "quick_links_heading": "Quick Links",
+        "quick_links_menu": "quick-links",
+        "other_info_heading": "Other Info",
+        "other_info_menu": "other-info",
         "newsletter_enable": true,
         "newsletter_heading": "Subscribe to our emails",
         "newsletter_description": "<p>Be the first to know about our biggest and best sales.</p>",

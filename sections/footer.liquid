@@ -38,7 +38,7 @@
       assign brand_empty = true
     endif
 
-    if section.blocks.size == 1 and section.blocks[0].type == 'brand_information' and brand_empty and has_social_icons == false and section.settings.newsletter_enable == false and section.settings.enable_follow_on_shop == false
+    if section.blocks.size == 1 and section.blocks[0].type == 'brand_information' and brand_empty and has_social_icons == false and section.settings.newsletter_enable == false and section.settings.enable_follow_on_shop == false and section.settings.quick_links_menu == blank and section.settings.other_info_menu == blank
       assign only_empty_brand = true
     endif
   -%}
@@ -47,16 +47,30 @@
     or section.settings.show_social
     and has_social_icons == true
     or section.settings.enable_follow_on_shop
+    or section.settings.quick_links_menu != blank
+    or section.settings.other_info_menu != blank
   -%}
     {%- unless only_empty_brand -%}
       <div class="footer__content-top page-width">
-        {%- if section.blocks.size > 0 -%}
+        {%- liquid
+          assign fixed_nav_count = 0
+          if section.settings.quick_links_menu != blank
+            assign fixed_nav_count = fixed_nav_count | plus: 1
+          endif
+          if section.settings.other_info_menu != blank
+            assign fixed_nav_count = fixed_nav_count | plus: 1
+          endif
+          assign total_footer_items = section.blocks.size | plus: fixed_nav_count
+        -%}
+        {%- if total_footer_items > 0 -%}
           {%- liquid
-            if section.blocks.size == 9
+            if total_footer_items == 9
               assign footer_grid_class = 'grid--3-col-tablet'
-            elsif section.blocks.size > 6
+            elsif total_footer_items > 6
               assign footer_grid_class = 'grid--4-col-desktop'
-            elsif section.blocks.size > 4
+            elsif total_footer_items > 4
+              assign footer_grid_class = 'grid--3-col-tablet'
+            elsif fixed_nav_count > 0
               assign footer_grid_class = 'grid--3-col-tablet'
             endif
           -%}
@@ -66,13 +80,65 @@
               data-cascade
             {% endif %}
           >
+            {%- if section.settings.quick_links_menu != blank -%}
+              <div
+                class="footer-block grid__item footer-block--menu{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                  style="--animation-order: 1;"
+                {% endif %}
+              >
+                {%- if section.settings.quick_links_heading != blank -%}
+                  <h2 class="footer-block__heading inline-richtext">{{ section.settings.quick_links_heading }}</h2>
+                {%- endif -%}
+                <ul class="footer-block__details-content list-unstyled">
+                  {%- for link in section.settings.quick_links_menu.links -%}
+                    <li>
+                      <a
+                        href="{{ link.url }}"
+                        class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
+                      >
+                        {{ link.title | escape }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.other_info_menu != blank -%}
+              <div
+                class="footer-block grid__item footer-block--menu{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                  style="--animation-order: 2;"
+                {% endif %}
+              >
+                {%- if section.settings.other_info_heading != blank -%}
+                  <h2 class="footer-block__heading inline-richtext">{{ section.settings.other_info_heading }}</h2>
+                {%- endif -%}
+                <ul class="footer-block__details-content list-unstyled">
+                  {%- for link in section.settings.other_info_menu.links -%}
+                    <li>
+                      <a
+                        href="{{ link.url }}"
+                        class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
+                      >
+                        {{ link.title | escape }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+
             {%- for block in section.blocks -%}
               <div
                 class="footer-block grid__item{% if block.type == 'link_list' %} footer-block--menu{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
                 {{ block.shopify_attributes }}
                 {% if settings.animations_reveal_on_scroll %}
                   data-cascade
-                  style="--animation-order: {{ forloop.index }};"
+                  style="--animation-order: {{ forloop.index | plus: fixed_nav_count }};"
                 {% endif %}
               >
                 {%- if block.settings.heading != blank -%}
@@ -440,6 +506,34 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Footer navigation menus"
+    },
+    {
+      "type": "text",
+      "id": "quick_links_heading",
+      "label": "Quick Links heading",
+      "default": "Quick Links"
+    },
+    {
+      "type": "link_list",
+      "id": "quick_links_menu",
+      "label": "Quick Links menu",
+      "info": "Manage the links shown in this column from Shopify Admin > Online Store > Navigation."
+    },
+    {
+      "type": "text",
+      "id": "other_info_heading",
+      "label": "Other Info heading",
+      "default": "Other Info"
+    },
+    {
+      "type": "link_list",
+      "id": "other_info_menu",
+      "label": "Other Info menu",
+      "info": "Manage the links shown in this column from Shopify Admin > Online Store > Navigation."
     },
     {
       "type": "header",

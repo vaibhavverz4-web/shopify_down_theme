@@ -113,6 +113,20 @@
         <label class="field__label" for="ContactForm-phone">{{ 'templates.contact.form.phone' | t }}</label>
       </div>
       <div class="field">
+        <select
+          id="ContactForm-country"
+          class="field__input"
+          name="contact[{{ 'templates.contact.form.country' | t }}]"
+        >
+          <option value="" disabled selected hidden>{{ 'templates.contact.form.country' | t }}</option>
+          {{ all_country_option_tags }}
+        </select>
+        <label class="field__label" for="ContactForm-country">{{ 'templates.contact.form.country' | t }}</label>
+        <span class="svg-wrapper field__select-icon">
+          {{- 'icon-caret.svg' | inline_asset_content -}}
+        </span>
+      </div>
+      <div class="field">
         <textarea
           rows="10"
           id="ContactForm-body"

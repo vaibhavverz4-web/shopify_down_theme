@@ -20,6 +20,21 @@
   }
 }
 
+.contact .field select.field__input {
+  cursor: pointer;
+  padding-right: 4.5rem;
+}
+
+.contact .field__select-icon {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 1rem;
+  height: 0.6rem;
+}
+
 .contact__button {
   margin-top: 3rem;
 }

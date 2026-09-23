@@ -1,0 +1,115 @@
+{% comment %}
+  Renders the track day event ticket booking form.
+  Only renders when the current product's handle is 'track-day-event-ticket'.
+
+  Usage:
+  {% render 'track-day-booking-form', product: product %}
+{% endcomment %}
+
+{%- if product.handle == 'track-day-event-ticket' -%}
+  <div class="track-day-booking-form">
+    <h3 class="track-day-booking-form__heading">Track Day Booking Details</h3>
+
+    <div class="track-day-booking-form__field field">
+      <input
+        class="track-day-booking-form__input field__input"
+        type="text"
+        id="TrackDayName-{{ section.id }}"
+        name="properties[Name]"
+        placeholder="Full Name"
+        autocomplete="name"
+        required
+      >
+      <label class="field__label" for="TrackDayName-{{ section.id }}">Full Name</label>
+    </div>
+
+    <div class="track-day-booking-form__field field">
+      <input
+        class="track-day-booking-form__input field__input"
+        type="tel"
+        id="TrackDayContactNumber-{{ section.id }}"
+        name="properties[Contact Number]"
+        placeholder="Contact Number"
+        autocomplete="tel"
+        required
+      >
+      <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
+    </div>
+
+    <div class="track-day-booking-form__row">
+      <div class="track-day-booking-form__field field">
+        <input
+          class="track-day-booking-form__input field__input"
+          type="date"
+          id="TrackDayPreferredDate-{{ section.id }}"
+          name="properties[Preferred Date]"
+          required
+        >
+        <label class="field__label" for="TrackDayPreferredDate-{{ section.id }}">Preferred Date</label>
+      </div>
+
+      <div class="track-day-booking-form__field field">
+        <input
+          class="track-day-booking-form__input field__input"
+          type="time"
+          id="TrackDayPreferredTime-{{ section.id }}"
+          name="properties[Preferred Time]"
+          required
+        >
+        <label class="field__label" for="TrackDayPreferredTime-{{ section.id }}">Preferred Time</label>
+      </div>
+    </div>
+
+    <div class="track-day-booking-form__field field">
+      <input
+        class="track-day-booking-form__input field__input"
+        type="text"
+        id="TrackDayCarPlateNumber-{{ section.id }}"
+        name="properties[Car Plate Number]"
+        placeholder="Car Plate Number"
+        required
+      >
+      <label class="field__label" for="TrackDayCarPlateNumber-{{ section.id }}">Car Plate Number</label>
+    </div>
+  </div>
+
+  {% style %}
+    .track-day-booking-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    .track-day-booking-form__heading {
+      margin: 0 0 0.5rem;
+      font-size: 1.6rem;
+    }
+
+    .track-day-booking-form__row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .track-day-booking-form__row .track-day-booking-form__field {
+      flex: 1 1 200px;
+    }
+
+    .track-day-booking-form__field {
+      width: 100%;
+      margin: 0;
+    }
+
+    .track-day-booking-form__input {
+      width: 100%;
+    }
+
+    @media screen and (max-width: 749px) {
+      .track-day-booking-form__row {
+        flex-direction: column;
+      }
+    }
+  {% endstyle %}
+{%- endif -%}

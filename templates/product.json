@@ -14,6 +14,7 @@
       "blocks": {
         "vendor": {
           "type": "text",
+          "disabled": true,
           "settings": {
             "text": "{{ product.vendor }}",
             "text_style": "uppercase"
@@ -78,38 +79,12 @@
         "image_zoom": "lightbox",
         "hide_variants": true,
         "enable_video_looping": false,
-        "padding_top": 36,
-        "padding_bottom": 12
+        "padding_top": 60,
+        "padding_bottom": 100
       }
     },
     "17865031324580f9cf": {
       "type": "apps",
-      "blocks": {
-        "mst_wishlist_prime_v3_app_block_list_product01": {
-          "type": "shopify://apps/mst-wishlist-prime/blocks/v3-app-block-list/7f9269b0-1b45-4d0c-8479-faf04f05d8ac",
-          "settings": {
-            "multi_language": true,
-            "iwish_add_txt": "Add To Wishlist",
-            "iwish_added_txt": "Added To Wishlist",
-            "theme_btn_class": "",
-            "icon_position": "top-right",
-            "icon_style": "heart",
-            "iwish_add_icon_outline": "",
-            "iwish_added_icon_filled": "",
-            "text_font_size": 14,
-            "text_color": "#000000",
-            "text_color_hover": "",
-            "background_color": "#ffffff",
-            "z_index": 2,
-            "qv_wrapper": "",
-            "qv_button": "",
-            "qv_close_button": ""
-          }
-        }
-      },
-      "block_order": [
-        "mst_wishlist_prime_v3_app_block_list_product01"
-      ],
       "settings": {
         "include_margins": true
       }
@@ -151,8 +126,7 @@
             "label": "Benefits",
             "use_description": false,
             "metaobject_field": "benefits",
-            "content": "",
-            "image": ""
+            "content": ""
           }
         },
         "tab_LmDNyr": {
@@ -180,6 +154,7 @@
         "tab_LmDNyr",
         "tab_kxkPHG"
       ],
+      "disabled": true,
       "name": "Product tabs",
       "settings": {
         "nav_alignment": "center",
@@ -203,6 +178,7 @@
     },
     "value_proposition_BaaL6G": {
       "type": "value-proposition",
+      "disabled": true,
       "name": "Value Proposition",
       "settings": {
         "eyebrow": "Value Proposition",

@@ -6,6 +6,7 @@ a.button {
     display: none;
 }
 
+
 /* Whole-card link (snippets/card-product.liquid, .full-width-link) sits at
    z-index: 2 so clicking anywhere on the card opens the product page.
    Quick-add controls need a higher z-index so they stay clickable instead

@@ -51,15 +51,16 @@
           id="TrackDayContactNumber-{{ section.id }}"
           name="properties[Contact Number]"
           placeholder="Contact Number"
-          autocomplete="tel"
-          pattern="[0-9+\(\)\-\s]{7,20}"
-          maxlength="20"
+          inputmode="numeric"
+          autocomplete="tel-national"
+          pattern="[0-9]{10}"
           required
           aria-required="true"
           aria-describedby="TrackDayContactNumber-{{ section.id }}-error"
           data-track-day-field
+          data-digits="10"
           data-required-message="Please enter your contact number."
-          data-invalid-message="Please enter a valid contact number (digits, spaces, +, - or brackets)."
+          data-invalid-message="Contact number must be exactly 10 digits."
         >
         <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
       </div>
@@ -78,12 +79,16 @@
             id="TrackDayPreferredDate-{{ section.id }}"
             name="properties[Preferred Date]"
             min="{{ 'now' | date: '%Y-%m-%d' }}"
+            max="{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
             required
             aria-required="true"
             aria-describedby="TrackDayPreferredDate-{{ section.id }}-error"
             data-track-day-field
+            data-max-days-ahead="365"
             data-required-message="Please choose a preferred date."
-            data-invalid-message="Please choose today or a later date."
+            data-invalid-message="Please enter a complete, valid date."
+            data-underflow-message="Please choose today or a later date."
+            data-overflow-message="Bookings can only be made up to 1 year in advance."
           >
           <label class="field__label" for="TrackDayPreferredDate-{{ section.id }}">Preferred Date</label>
         </div>

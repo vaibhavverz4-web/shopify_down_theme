@@ -18,16 +18,35 @@ if (!window.trackDayBookingFormLoaded) {
 
   const getPaymentButton = (bookingForm) => bookingForm.closest('form')?.querySelector('.shopify-payment-button');
 
-  const todayISO = () => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    return now.toISOString().slice(0, 10);
+  // Local-time YYYY-MM-DD, `days` from today.
+  const isoDateFromToday = (days = 0) => {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    return date.toISOString().slice(0, 10);
   };
 
   const getFieldError = (input) => {
-    if (!input.value.trim()) return input.dataset.requiredMessage;
-    if (!input.checkValidity()) return input.dataset.invalidMessage || input.dataset.requiredMessage;
+    const { validity, dataset } = input;
+    // A partially typed / impossible date (e.g. a 6-digit year) reports
+    // badInput with an empty value, so check it before "required".
+    if (validity.badInput) return dataset.invalidMessage;
+    if (!input.value.trim()) return dataset.requiredMessage;
+    if (validity.rangeUnderflow && dataset.underflowMessage) return dataset.underflowMessage;
+    if (validity.rangeOverflow && dataset.overflowMessage) return dataset.overflowMessage;
+    if (!input.checkValidity()) return dataset.invalidMessage || dataset.requiredMessage;
     return '';
+  };
+
+  // Show an error while typing only when waiting for blur would be pointless:
+  // too many digits, or a date (a picker choice or typed date is a complete action).
+  const shouldValidateInstantly = (input) =>
+    input.type === 'date' || (input.dataset.digits && input.value.length > Number(input.dataset.digits));
+
+  // Strips everything but digits (spaces, dashes, letters, pasted "+").
+  const sanitizeDigits = (input) => {
+    const digits = input.value.replace(/\D/g, '');
+    if (digits !== input.value) input.value = digits;
   };
 
   const setFieldError = (input, message) => {
@@ -62,7 +81,8 @@ if (!window.trackDayBookingFormLoaded) {
   const validateAll = (bookingForm) => {
     let firstInvalid = null;
     getFields(bookingForm).forEach((input) => {
-      input.value = input.value.trim();
+      const trimmed = input.value.trim();
+      if (trimmed !== input.value) input.value = trimmed;
       const message = getFieldError(input);
       setFieldError(input, message);
       if (message && !firstInvalid) firstInvalid = input;
@@ -88,8 +108,13 @@ if (!window.trackDayBookingFormLoaded) {
     if (bookingForm.dataset.trackDayReady) return;
     bookingForm.dataset.trackDayReady = 'true';
 
-    const dateInput = bookingForm.querySelector('input[type="date"]');
-    if (dateInput) dateInput.min = todayISO();
+    // The Liquid min/max use the store's timezone and cached page time;
+    // refresh them to the shopper's local today.
+    bookingForm.querySelectorAll('input[type="date"]').forEach((dateInput) => {
+      dateInput.min = isoDateFromToday();
+      const maxDaysAhead = Number(dateInput.dataset.maxDaysAhead);
+      if (maxDaysAhead) dateInput.max = isoDateFromToday(maxDaysAhead);
+    });
   };
 
   const refreshAll = () => {
@@ -136,16 +161,31 @@ if (!window.trackDayBookingFormLoaded) {
     if (!input.matches?.(FIELD_SELECTOR)) return;
     const bookingForm = input.closest(FORM_SELECTOR);
 
-    // Clear an error as soon as the field is fixed; don't nag while typing.
-    if (input.getAttribute('aria-invalid') === 'true') setFieldError(input, getFieldError(input));
+    if (input.dataset.digits) sanitizeDigits(input);
+
+    // Clear an error as soon as the field is fixed; otherwise only flag it
+    // mid-typing when it is already definitely wrong.
+    if (input.getAttribute('aria-invalid') === 'true' || shouldValidateInstantly(input)) {
+      setFieldError(input, getFieldError(input));
+    }
     if (isValid(bookingForm)) setSummaryError(bookingForm, false);
     updateLock(bookingForm);
   });
 
   document.addEventListener('focusout', (event) => {
     const input = event.target;
-    if (!input.matches?.(FIELD_SELECTOR) || !input.value) return;
+    if (!input.matches?.(FIELD_SELECTOR) || (!input.value && !input.validity.badInput)) return;
     setFieldError(input, getFieldError(input));
+  });
+
+  // Date pickers can commit a value via `change` without an `input` event.
+  document.addEventListener('change', (event) => {
+    const input = event.target;
+    if (!input.matches?.('input[type="date"]' + FIELD_SELECTOR)) return;
+    const bookingForm = input.closest(FORM_SELECTOR);
+    setFieldError(input, getFieldError(input));
+    if (isValid(bookingForm)) setSummaryError(bookingForm, false);
+    updateLock(bookingForm);
   });
 
   // Product info / quick add can replace the form markup, and Shopify injects

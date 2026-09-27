@@ -2,76 +2,145 @@
   Renders the track day event ticket booking form.
   Only renders when the current product's handle is 'track-day-event-ticket'.
 
+  Every field is required. The product form is rendered with `novalidate` and
+  submitted over AJAX by product-form.js, so native `required` is not enforced;
+  track-day-booking-form.js validates before submit and locks "Buy it now"
+  until all fields are valid.
+
   Usage:
   {% render 'track-day-booking-form', product: product %}
 {% endcomment %}
 
 {%- if product.handle == 'track-day-event-ticket' -%}
-  <div class="track-day-booking-form">
+  <div
+    class="track-day-booking-form"
+    data-track-day-form
+    data-summary-message="Please complete all booking details before continuing."
+  >
     <h3 class="track-day-booking-form__heading">Track Day Booking Details</h3>
 
-    <div class="track-day-booking-form__field field">
-      <input
-        class="track-day-booking-form__input field__input"
-        type="text"
-        id="TrackDayName-{{ section.id }}"
-        name="properties[Name]"
-        placeholder="Full Name"
-        autocomplete="name"
-        required
-      >
-      <label class="field__label" for="TrackDayName-{{ section.id }}">Full Name</label>
+    <div class="track-day-booking-form__field">
+      <div class="field">
+        <input
+          class="track-day-booking-form__input field__input"
+          type="text"
+          id="TrackDayName-{{ section.id }}"
+          name="properties[Name]"
+          placeholder="Full Name"
+          autocomplete="name"
+          maxlength="100"
+          required
+          aria-required="true"
+          aria-describedby="TrackDayName-{{ section.id }}-error"
+          data-track-day-field
+          data-required-message="Please enter your full name."
+        >
+        <label class="field__label" for="TrackDayName-{{ section.id }}">Full Name</label>
+      </div>
+      <p class="track-day-booking-form__error form__message" id="TrackDayName-{{ section.id }}-error" hidden>
+        <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+        <span class="track-day-booking-form__error-text"></span>
+      </p>
     </div>
 
-    <div class="track-day-booking-form__field field">
-      <input
-        class="track-day-booking-form__input field__input"
-        type="tel"
-        id="TrackDayContactNumber-{{ section.id }}"
-        name="properties[Contact Number]"
-        placeholder="Contact Number"
-        autocomplete="tel"
-        required
-      >
-      <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
+    <div class="track-day-booking-form__field">
+      <div class="field">
+        <input
+          class="track-day-booking-form__input field__input"
+          type="tel"
+          id="TrackDayContactNumber-{{ section.id }}"
+          name="properties[Contact Number]"
+          placeholder="Contact Number"
+          autocomplete="tel"
+          pattern="[0-9+\(\)\-\s]{7,20}"
+          maxlength="20"
+          required
+          aria-required="true"
+          aria-describedby="TrackDayContactNumber-{{ section.id }}-error"
+          data-track-day-field
+          data-required-message="Please enter your contact number."
+          data-invalid-message="Please enter a valid contact number (digits, spaces, +, - or brackets)."
+        >
+        <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
+      </div>
+      <p class="track-day-booking-form__error form__message" id="TrackDayContactNumber-{{ section.id }}-error" hidden>
+        <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+        <span class="track-day-booking-form__error-text"></span>
+      </p>
     </div>
 
     <div class="track-day-booking-form__row">
-      <div class="track-day-booking-form__field field">
-        <input
-          class="track-day-booking-form__input field__input"
-          type="date"
-          id="TrackDayPreferredDate-{{ section.id }}"
-          name="properties[Preferred Date]"
-          required
-        >
-        <label class="field__label" for="TrackDayPreferredDate-{{ section.id }}">Preferred Date</label>
+      <div class="track-day-booking-form__field">
+        <div class="field">
+          <input
+            class="track-day-booking-form__input field__input"
+            type="date"
+            id="TrackDayPreferredDate-{{ section.id }}"
+            name="properties[Preferred Date]"
+            min="{{ 'now' | date: '%Y-%m-%d' }}"
+            required
+            aria-required="true"
+            aria-describedby="TrackDayPreferredDate-{{ section.id }}-error"
+            data-track-day-field
+            data-required-message="Please choose a preferred date."
+            data-invalid-message="Please choose today or a later date."
+          >
+          <label class="field__label" for="TrackDayPreferredDate-{{ section.id }}">Preferred Date</label>
+        </div>
+        <p class="track-day-booking-form__error form__message" id="TrackDayPreferredDate-{{ section.id }}-error" hidden>
+          <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+          <span class="track-day-booking-form__error-text"></span>
+        </p>
       </div>
 
-      <div class="track-day-booking-form__field field">
-        <input
-          class="track-day-booking-form__input field__input"
-          type="time"
-          id="TrackDayPreferredTime-{{ section.id }}"
-          name="properties[Preferred Time]"
-          required
-        >
-        <label class="field__label" for="TrackDayPreferredTime-{{ section.id }}">Preferred Time</label>
+      <div class="track-day-booking-form__field">
+        <div class="field">
+          <input
+            class="track-day-booking-form__input field__input"
+            type="time"
+            id="TrackDayPreferredTime-{{ section.id }}"
+            name="properties[Preferred Time]"
+            required
+            aria-required="true"
+            aria-describedby="TrackDayPreferredTime-{{ section.id }}-error"
+            data-track-day-field
+            data-required-message="Please choose a preferred time."
+          >
+          <label class="field__label" for="TrackDayPreferredTime-{{ section.id }}">Preferred Time</label>
+        </div>
+        <p class="track-day-booking-form__error form__message" id="TrackDayPreferredTime-{{ section.id }}-error" hidden>
+          <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+          <span class="track-day-booking-form__error-text"></span>
+        </p>
       </div>
     </div>
 
-    <div class="track-day-booking-form__field field">
-      <input
-        class="track-day-booking-form__input field__input"
-        type="text"
-        id="TrackDayCarPlateNumber-{{ section.id }}"
-        name="properties[Car Plate Number]"
-        placeholder="Car Plate Number"
-        required
-      >
-      <label class="field__label" for="TrackDayCarPlateNumber-{{ section.id }}">Car Plate Number</label>
+    <div class="track-day-booking-form__field">
+      <div class="field">
+        <input
+          class="track-day-booking-form__input field__input"
+          type="text"
+          id="TrackDayCarPlateNumber-{{ section.id }}"
+          name="properties[Car Plate Number]"
+          placeholder="Car Plate Number"
+          autocapitalize="characters"
+          maxlength="15"
+          required
+          aria-required="true"
+          aria-describedby="TrackDayCarPlateNumber-{{ section.id }}-error"
+          data-track-day-field
+          data-required-message="Please enter your car plate number."
+        >
+        <label class="field__label" for="TrackDayCarPlateNumber-{{ section.id }}">Car Plate Number</label>
+      </div>
+      <p class="track-day-booking-form__error form__message" id="TrackDayCarPlateNumber-{{ section.id }}-error" hidden>
+        <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+        <span class="track-day-booking-form__error-text"></span>
+      </p>
     </div>
   </div>
+
+  <script src="{{ 'track-day-booking-form.js' | asset_url }}" defer="defer"></script>
 
   {% style %}
     .track-day-booking-form {
@@ -99,11 +168,35 @@
 
     .track-day-booking-form__field {
       width: 100%;
+    }
+
+    .track-day-booking-form__field .field {
       margin: 0;
     }
 
     .track-day-booking-form__input {
       width: 100%;
+    }
+
+    .track-day-booking-form__input[aria-invalid='true'] {
+      box-shadow: 0 0 0 0.1rem rgb(var(--color-foreground));
+      outline: 0.1rem solid rgb(var(--color-foreground));
+    }
+
+    .track-day-booking-form__error {
+      margin-top: 0.6rem;
+      line-height: 1.3;
+    }
+
+    .track-day-booking-form__error[hidden] {
+      display: none;
+    }
+
+    .track-day-booking-form__error .svg-wrapper {
+      flex-shrink: 0;
+      width: 1.3rem;
+      height: 1.3rem;
+      margin-right: 0.5rem;
     }
 
     @media screen and (max-width: 749px) {

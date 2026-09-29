@@ -39,14 +39,24 @@ if (!window.trackDayBookingFormLoaded) {
   };
 
   // Show an error while typing only when waiting for blur would be pointless:
-  // too many digits, or a date (a picker choice or typed date is a complete action).
-  const shouldValidateInstantly = (input) =>
-    input.type === 'date' || (input.dataset.digits && input.value.length > Number(input.dataset.digits));
+  // a date (a picker choice or typed date is a complete action).
+  const shouldValidateInstantly = (input) => input.type === 'date';
 
-  // Strips everything but digits (spaces, dashes, letters, pasted "+").
-  const sanitizeDigits = (input) => {
+  // Strips everything but digits, keeping a single leading "+" for country codes.
+  const sanitizePhone = (input) => {
+    const hasLeadingPlus = input.value.startsWith('+');
     const digits = input.value.replace(/\D/g, '');
-    if (digits !== input.value) input.value = digits;
+    const sanitized = (hasLeadingPlus ? '+' : '') + digits;
+    if (sanitized !== input.value) input.value = sanitized;
+  };
+
+  // A date input's own value is always yyyy-mm-dd; mirror it into the hidden
+  // dd/mm/yyyy field that actually gets submitted as the line item property.
+  const syncDateHidden = (input) => {
+    const hidden = input.parentElement?.querySelector('[data-track-day-date-hidden]');
+    if (!hidden) return;
+    const [year, month, day] = input.value.split('-');
+    hidden.value = input.validity.valid && day ? `${day}/${month}/${year}` : '';
   };
 
   const setFieldError = (input, message) => {
@@ -85,6 +95,7 @@ if (!window.trackDayBookingFormLoaded) {
       if (trimmed !== input.value) input.value = trimmed;
       const message = getFieldError(input);
       setFieldError(input, message);
+      if (input.type === 'date') syncDateHidden(input);
       if (message && !firstInvalid) firstInvalid = input;
     });
     setSummaryError(bookingForm, Boolean(firstInvalid));
@@ -161,7 +172,8 @@ if (!window.trackDayBookingFormLoaded) {
     if (!input.matches?.(FIELD_SELECTOR)) return;
     const bookingForm = input.closest(FORM_SELECTOR);
 
-    if (input.dataset.digits) sanitizeDigits(input);
+    if (input.type === 'tel') sanitizePhone(input);
+    if (input.type === 'date') syncDateHidden(input);
 
     // Clear an error as soon as the field is fixed; otherwise only flag it
     // mid-typing when it is already definitely wrong.
@@ -184,6 +196,7 @@ if (!window.trackDayBookingFormLoaded) {
     if (!input.matches?.('input[type="date"]' + FIELD_SELECTOR)) return;
     const bookingForm = input.closest(FORM_SELECTOR);
     setFieldError(input, getFieldError(input));
+    syncDateHidden(input);
     if (isValid(bookingForm)) setSummaryError(bookingForm, false);
     updateLock(bookingForm);
   });

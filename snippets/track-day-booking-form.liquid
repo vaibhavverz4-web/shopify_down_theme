@@ -51,16 +51,16 @@
           id="TrackDayContactNumber-{{ section.id }}"
           name="properties[Contact Number]"
           placeholder="Contact Number"
-          inputmode="numeric"
-          autocomplete="tel-national"
-          pattern="[0-9]{10}"
+          inputmode="tel"
+          autocomplete="tel"
+          pattern="\+?[0-9]+"
+          maxlength="16"
           required
           aria-required="true"
           aria-describedby="TrackDayContactNumber-{{ section.id }}-error"
           data-track-day-field
-          data-digits="10"
           data-required-message="Please enter your contact number."
-          data-invalid-message="Contact number must be exactly 10 digits."
+          data-invalid-message="Contact number can only contain digits and an optional leading + sign."
         >
         <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
       </div>
@@ -77,7 +77,6 @@
             class="track-day-booking-form__input field__input"
             type="date"
             id="TrackDayPreferredDate-{{ section.id }}"
-            name="properties[Preferred Date]"
             min="{{ 'now' | date: '%Y-%m-%d' }}"
             max="{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
             required
@@ -90,6 +89,13 @@
             data-underflow-message="Please choose today or a later date."
             data-overflow-message="Bookings can only be made up to 1 year in advance."
           >
+          {%- comment -%}
+            The visible field stays type="date" for a native picker and to block
+            past/invalid dates; it has no `name` so it isn't submitted directly.
+            This hidden field mirrors it in dd/mm/yyyy for the cart line item
+            property, since a date input's own value is always yyyy-mm-dd.
+          {%- endcomment -%}
+          <input type="hidden" name="properties[Preferred Date]" data-track-day-date-hidden>
           <label class="field__label" for="TrackDayPreferredDate-{{ section.id }}">Preferred Date</label>
         </div>
         <p class="track-day-booking-form__error form__message" id="TrackDayPreferredDate-{{ section.id }}-error" hidden>
@@ -129,12 +135,14 @@
           name="properties[Car Plate Number]"
           placeholder="Car Plate Number"
           autocapitalize="characters"
+          pattern="[A-Za-z0-9 ]+"
           maxlength="15"
           required
           aria-required="true"
           aria-describedby="TrackDayCarPlateNumber-{{ section.id }}-error"
           data-track-day-field
           data-required-message="Please enter your car plate number."
+          data-invalid-message="Car plate number can only contain letters, numbers and spaces."
         >
         <label class="field__label" for="TrackDayCarPlateNumber-{{ section.id }}">Car Plate Number</label>
       </div>

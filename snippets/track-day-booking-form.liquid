@@ -44,23 +44,33 @@
     </div>
 
     <div class="track-day-booking-form__field">
+      {%- comment -%}
+        Singapore numbers only: a fixed "+65" prefix followed by exactly
+        8 digits starting with 3, 6, 8 or 9 (e.g. +6581234567).
+        track-day-booking-form.js keeps the prefix in place and strips or
+        truncates anything typed or pasted beyond the 8 digits.
+      {%- endcomment -%}
       <div class="field">
         <input
           class="track-day-booking-form__input field__input"
           type="tel"
           id="TrackDayContactNumber-{{ section.id }}"
           name="properties[Contact Number]"
-          placeholder="Contact Number"
-          inputmode="tel"
-          autocomplete="tel"
-          pattern="\+?[0-9]+"
-          maxlength="16"
+          value="+65"
+          placeholder="+65XXXXXXXX"
+          inputmode="numeric"
+          autocomplete="tel-national"
+          pattern="\+65[3689][0-9]{7}"
+          minlength="11"
+          maxlength="11"
           required
           aria-required="true"
           aria-describedby="TrackDayContactNumber-{{ section.id }}-error"
           data-track-day-field
+          data-phone-prefix="+65"
+          data-phone-digits="8"
           data-required-message="Please enter your contact number."
-          data-invalid-message="Contact number can only contain digits and an optional leading + sign."
+          data-invalid-message="Please enter a valid Singapore number: +65 followed by 8 digits, starting with 3, 6, 8 or 9."
         >
         <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
       </div>

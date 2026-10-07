@@ -42,8 +42,9 @@ if (!window.trackDayBookingFormLoaded) {
   // a date (a picker choice or typed date is a complete action).
   const shouldValidateInstantly = (input) => input.type === 'date';
 
-  // Phone fields accept digits with an optional leading "+" (any country
-  // code), up to data-phone-max-digits digits (15, the E.164 maximum).
+  // Phone fields accept digits with an optional leading "+", up to
+  // data-phone-max-digits digits. The final format is checked by the input's
+  // `pattern` (e.g. "+" and exactly 12 digits).
   const isPhoneField = (input) => input.matches?.(`input[data-phone-max-digits]${FIELD_SELECTOR}`);
 
   const getPhoneMaxDigits = (input) => Number(input.dataset.phoneMaxDigits) || 15;
@@ -67,6 +68,13 @@ if (!window.trackDayBookingFormLoaded) {
   const sanitizePhone = (input) => {
     if (isAllowedPhone(input, input.value)) return;
     input.value = normalizePhone(input, input.value);
+  };
+
+  // With data-phone-leading-plus, a full-length number typed without the "+"
+  // (e.g. "919876543210") gets it added when the field is checked.
+  const completePhone = (input) => {
+    if (!('phoneLeadingPlus' in input.dataset)) return;
+    if (new RegExp(`^\\d{${getPhoneMaxDigits(input)}}$`).test(input.value)) input.value = `+${input.value}`;
   };
 
   // A date input's own value is always yyyy-mm-dd; mirror it into the hidden
@@ -112,6 +120,7 @@ if (!window.trackDayBookingFormLoaded) {
     getFields(bookingForm).forEach((input) => {
       const trimmed = input.value.trim();
       if (trimmed !== input.value) input.value = trimmed;
+      if (isPhoneField(input)) completePhone(input);
       const message = getFieldError(input);
       setFieldError(input, message);
       if (input.type === 'date') syncDateHidden(input);
@@ -209,6 +218,10 @@ if (!window.trackDayBookingFormLoaded) {
   document.addEventListener('focusout', (event) => {
     const input = event.target;
     if (!input.matches?.(FIELD_SELECTOR) || (!input.value && !input.validity.badInput)) return;
+    if (isPhoneField(input)) {
+      completePhone(input);
+      updateLock(input.closest(FORM_SELECTOR));
+    }
     setFieldError(input, getFieldError(input));
   });
 

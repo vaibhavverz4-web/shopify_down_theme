@@ -45,13 +45,14 @@
 
     <div class="track-day-booking-form__field">
       {%- comment -%}
-        Any country: digits with an optional leading "+", up to 15 digits
-        (the E.164 maximum), e.g. +6581234567 or 81234567. The blank
-        placeholder=" " shows no text but lets Dawn's :placeholder-shown rules
-        float the label like the other fields.
+        Format: "+" then exactly 12 digits (2-digit country code + 10-digit
+        number), e.g. +919876543210. The blank placeholder=" " shows no text
+        but lets Dawn's :placeholder-shown rules float the label like the
+        other fields.
         track-day-booking-form.js blocks anything else as it is typed (letters,
-        spaces, symbols, a "+" anywhere but first, a 16th digit) and strips it
-        from pasted numbers such as "+65 8123-4567".
+        spaces, symbols, a "+" anywhere but first, a 13th digit), strips it
+        from pasted numbers such as "+91 98765-43210", and adds the "+" to a
+        12-digit number typed without it (data-phone-leading-plus).
       {%- endcomment -%}
       <div class="field">
         <input
@@ -62,15 +63,17 @@
           placeholder=" "
           inputmode="tel"
           autocomplete="tel"
-          pattern="\+?[0-9]{1,15}"
-          maxlength="16"
+          pattern="\+[0-9]{12}"
+          minlength="13"
+          maxlength="13"
           required
           aria-required="true"
           aria-describedby="TrackDayContactNumber-{{ section.id }}-error"
           data-track-day-field
-          data-phone-max-digits="15"
+          data-phone-max-digits="12"
+          data-phone-leading-plus
           data-required-message="Please enter your contact number."
-          data-invalid-message="Contact number can only contain digits (up to 15) and an optional leading + sign."
+          data-invalid-message="Please enter + followed by a 2-digit country code and 10-digit number, e.g. +919876543210."
         >
         <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
       </div>

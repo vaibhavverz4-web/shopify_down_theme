@@ -42,25 +42,37 @@ if (!window.trackDayBookingFormLoaded) {
   // a date (a picker choice or typed date is a complete action).
   const shouldValidateInstantly = (input) => input.type === 'date';
 
-  // Phone fields accept digits with an optional leading "+", up to
-  // data-phone-max-digits digits. The final format is checked by the input's
-  // `pattern` (e.g. "+" and exactly 12 digits).
+  // Phone fields accept digits with an optional leading "+": up to
+  // data-phone-local-digits digits without it (a local number) and up to
+  // data-phone-max-digits with it (an international number). The final
+  // format is checked by the input's `pattern`.
   const isPhoneField = (input) => input.matches?.(`input[data-phone-max-digits]${FIELD_SELECTOR}`);
 
-  const getPhoneMaxDigits = (input) => Number(input.dataset.phoneMaxDigits) || 15;
+  const getPhoneMaxDigits = (input, hasLeadingPlus) =>
+    Number(hasLeadingPlus ? input.dataset.phoneMaxDigits : input.dataset.phoneLocalDigits) ||
+    Number(input.dataset.phoneMaxDigits) ||
+    15;
 
   // True when the value only has digits, a "+" (if any) in first position,
-  // and no more than the maximum number of digits.
-  const isAllowedPhone = (input, value) =>
-    new RegExp(`^\\+?\\d{0,${getPhoneMaxDigits(input)}}$`).test(value);
+  // and no more than the maximum number of digits for that format.
+  const isAllowedPhone = (input, value) => {
+    const hasLeadingPlus = value.startsWith('+');
+    const digits = hasLeadingPlus ? value.slice(1) : value;
+    return new RegExp(`^\\d{0,${getPhoneMaxDigits(input, hasLeadingPlus)}}$`).test(digits);
+  };
 
-  // Strips everything but digits, keeps a "+" only if the text starts with
-  // one (e.g. pasted "+971 (50) 123-4567" becomes "+971501234567"), and caps
-  // the number at the maximum number of digits.
+  // Strips everything but digits and keeps a "+" only if the text starts with
+  // one (e.g. pasted "+91 97129-92967" becomes "+919712992967"). A number too
+  // long to be local is treated as international: "0091…" or "91…" (12
+  // digits) becomes "+91…" instead of being cut short.
   const normalizePhone = (input, raw) => {
-    const hasLeadingPlus = raw.trim().startsWith('+');
-    const digits = raw.replace(/\D/g, '').slice(0, getPhoneMaxDigits(input));
-    return (hasLeadingPlus ? '+' : '') + digits;
+    let hasLeadingPlus = raw.trim().startsWith('+');
+    let digits = raw.replace(/\D/g, '');
+    if (!hasLeadingPlus && digits.length > getPhoneMaxDigits(input, false)) {
+      hasLeadingPlus = true;
+      if (digits.startsWith('00')) digits = digits.slice(2);
+    }
+    return (hasLeadingPlus ? '+' : '') + digits.slice(0, getPhoneMaxDigits(input, hasLeadingPlus));
   };
 
   // Fallback for edits `beforeinput` doesn't block (autofill, drag and drop,
@@ -68,13 +80,6 @@ if (!window.trackDayBookingFormLoaded) {
   const sanitizePhone = (input) => {
     if (isAllowedPhone(input, input.value)) return;
     input.value = normalizePhone(input, input.value);
-  };
-
-  // With data-phone-leading-plus, a full-length number typed without the "+"
-  // (e.g. "919876543210") gets it added when the field is checked.
-  const completePhone = (input) => {
-    if (!('phoneLeadingPlus' in input.dataset)) return;
-    if (new RegExp(`^\\d{${getPhoneMaxDigits(input)}}$`).test(input.value)) input.value = `+${input.value}`;
   };
 
   // A date input's own value is always yyyy-mm-dd; mirror it into the hidden
@@ -120,7 +125,6 @@ if (!window.trackDayBookingFormLoaded) {
     getFields(bookingForm).forEach((input) => {
       const trimmed = input.value.trim();
       if (trimmed !== input.value) input.value = trimmed;
-      if (isPhoneField(input)) completePhone(input);
       const message = getFieldError(input);
       setFieldError(input, message);
       if (input.type === 'date') syncDateHidden(input);
@@ -218,10 +222,6 @@ if (!window.trackDayBookingFormLoaded) {
   document.addEventListener('focusout', (event) => {
     const input = event.target;
     if (!input.matches?.(FIELD_SELECTOR) || (!input.value && !input.validity.badInput)) return;
-    if (isPhoneField(input)) {
-      completePhone(input);
-      updateLock(input.closest(FORM_SELECTOR));
-    }
     setFieldError(input, getFieldError(input));
   });
 

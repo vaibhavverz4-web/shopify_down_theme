@@ -45,14 +45,16 @@
 
     <div class="track-day-booking-form__field">
       {%- comment -%}
-        Format: "+" then exactly 12 digits (2-digit country code + 10-digit
-        number), e.g. +919876543210. The blank placeholder=" " shows no text
-        but lets Dawn's :placeholder-shown rules float the label like the
-        other fields.
+        Accepted formats (see `pattern`):
+          - 8-10 digits without "+", e.g. 9712992967 or 81234567
+          - +91 then 10 digits, e.g. +919712992967
+          - +65 then 8-10 digits, e.g. +6581234567
+          - any other "+" country code, 10-15 digits in total
+        The blank placeholder=" " shows no text but lets Dawn's
+        :placeholder-shown rules float the label like the other fields.
         track-day-booking-form.js blocks anything else as it is typed (letters,
-        spaces, symbols, a "+" anywhere but first, a 13th digit), strips it
-        from pasted numbers such as "+91 98765-43210", and adds the "+" to a
-        12-digit number typed without it (data-phone-leading-plus).
+        spaces, symbols, a "+" anywhere but first, more than 10 digits without
+        "+" or 15 with it) and strips it from pasted numbers.
       {%- endcomment -%}
       <div class="field">
         <input
@@ -63,15 +65,15 @@
           placeholder=" "
           inputmode="tel"
           autocomplete="tel"
-          pattern="\+[0-9]{12}"
-          minlength="13"
-          maxlength="13"
+          pattern="[0-9]{8,10}|\+91[0-9]{10}|\+65[0-9]{8,10}|\+(?!91|65)[0-9]{10,15}"
+          minlength="8"
+          maxlength="16"
           required
           aria-required="true"
           aria-describedby="TrackDayContactNumber-{{ section.id }}-error"
           data-track-day-field
-          data-phone-max-digits="12"
-          data-phone-leading-plus
+          data-phone-local-digits="10"
+          data-phone-max-digits="15"
           data-required-message="Please enter mobile number."
           data-invalid-message="Please enter mobile number."
         >

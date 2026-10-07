@@ -1746,3 +1746,132 @@ a.tmarquee__text:focus-visible {
     transform: none;
   }
 }
+
+/* ------------------------------------------------------------
+   Track Day Booking Form — Google Forms style
+   snippets/track-day-booking-form.liquid
+   CSS only: each field is a card, the label sits above an
+   underlined input. Overrides Dawn's floating label and boxed
+   .field styles (base.css) for this form only. Some selectors are
+   one level more specific so they beat the snippet's inline
+   {% style %}, which loads after this file.
+   ------------------------------------------------------------ */
+
+[data-track-day-form].track-day-booking-form {
+  --tdbf-accent: #1a73e8;
+  --tdbf-border: #dadce0;
+  --tdbf-error: #d93025;
+  gap: 0;
+}
+
+.track-day-booking-form .track-day-booking-form__heading {
+  margin-bottom: 16px;
+}
+
+.track-day-booking-form .track-day-booking-form__row {
+  gap: 0 16px;
+}
+
+/* ---------- Cards ---------- */
+
+.track-day-booking-form__field {
+  background: #ffffff;
+  border: 1px solid var(--tdbf-border);
+  border-radius: 8px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color var(--duration-short) ease;
+}
+
+/* The snippet stacks the date/time row on mobile but keeps its 200px
+   flex-basis, which would make these cards 200px tall. */
+@media screen and (max-width: 749px) {
+  .track-day-booking-form .track-day-booking-form__row .track-day-booking-form__field {
+    flex: none;
+  }
+}
+
+.track-day-booking-form__field:has([aria-invalid='true']) {
+  border-color: var(--tdbf-error);
+}
+
+/* Drop Dawn's boxed border and shadow drawn on .field */
+.track-day-booking-form .field::before,
+.track-day-booking-form .field::after {
+  display: none;
+}
+
+/* ---------- Labels: fixed above the input ---------- */
+
+.track-day-booking-form .field {
+  flex-direction: column;
+}
+
+.track-day-booking-form .field .field__input ~ .field__label {
+  position: static;
+  order: -1;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: var(--font-body-weight-bold);
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: uppercase;
+  color: #202124;
+  transition: none;
+}
+
+/* Required marker; hidden from screen readers (inputs use aria-required). */
+.track-day-booking-form .field .field__input:required ~ .field__label::after {
+  content: ' *';
+  content: ' *' / '';
+  color: var(--tdbf-error);
+}
+
+/* ---------- Inputs: underline only ---------- */
+
+.track-day-booking-form .field .field__input {
+  height: auto;
+  margin: 0;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--tdbf-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  color: #202124;
+  transition: border-color var(--duration-short) ease, box-shadow var(--duration-short) ease;
+}
+
+.track-day-booking-form .field .field__input::placeholder {
+  opacity: 1;
+  color: #80868b;
+}
+
+/* 2px underline on focus: 1px border + 1px inset shadow, so nothing shifts. */
+.track-day-booking-form .field .field__input:focus,
+.track-day-booking-form .field .field__input:focus-visible {
+  border-bottom-color: var(--tdbf-accent);
+  box-shadow: inset 0 -1px 0 var(--tdbf-accent);
+  outline: none;
+}
+
+/* Replaces the snippet's boxed invalid outline with a red underline. */
+.track-day-booking-form .field .track-day-booking-form__input[aria-invalid='true'] {
+  border-bottom-color: var(--tdbf-error);
+  box-shadow: inset 0 -1px 0 var(--tdbf-error);
+  outline: none;
+}
+
+.track-day-booking-form .track-day-booking-form__error {
+  color: var(--tdbf-error);
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track-day-booking-form__field,
+  .track-day-booking-form .field .field__input {
+    transition: none;
+  }
+}

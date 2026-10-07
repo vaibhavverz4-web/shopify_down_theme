@@ -45,10 +45,11 @@
 
     <div class="track-day-booking-form__field">
       {%- comment -%}
-        Singapore numbers only: a fixed "+65" prefix followed by exactly
-        8 digits starting with 3, 6, 8 or 9 (e.g. +6581234567).
-        track-day-booking-form.js keeps the prefix in place and strips or
-        truncates anything typed or pasted beyond the 8 digits.
+        Singapore numbers only: 8 digits starting with 3, 6, 8 or 9, with or
+        without the "+65" country code (e.g. 81234567 or +6581234567).
+        track-day-booking-form.js blocks letters, a "+" anywhere but first,
+        other country codes and digits beyond the limit, and cleans up
+        pasted numbers such as "+65 8123 4567".
       {%- endcomment -%}
       <div class="field">
         <input
@@ -56,21 +57,20 @@
           type="tel"
           id="TrackDayContactNumber-{{ section.id }}"
           name="properties[Contact Number]"
-          value="+65"
-          placeholder="+65XXXXXXXX"
-          inputmode="numeric"
+          placeholder="e.g. 81234567 or +65 81234567"
+          inputmode="tel"
           autocomplete="tel-national"
-          pattern="\+65[3689][0-9]{7}"
-          minlength="11"
-          maxlength="11"
+          pattern="(\+65)?[3689][0-9]{7}"
+          minlength="8"
+          maxlength="12"
           required
           aria-required="true"
           aria-describedby="TrackDayContactNumber-{{ section.id }}-error"
           data-track-day-field
-          data-phone-prefix="+65"
+          data-phone-country-code="65"
           data-phone-digits="8"
           data-required-message="Please enter your contact number."
-          data-invalid-message="Please enter a valid Singapore number: +65 followed by 8 digits, starting with 3, 6, 8 or 9."
+          data-invalid-message="Please enter a valid Singapore number: 8 digits starting with 3, 6, 8 or 9, optionally with +65 in front."
         >
         <label class="field__label" for="TrackDayContactNumber-{{ section.id }}">Contact Number</label>
       </div>
@@ -199,6 +199,12 @@
 
     .track-day-booking-form__input {
       width: 100%;
+    }
+
+    /* Dawn hides placeholders behind the floating label; show the phone
+       format example once the label has moved up on focus. */
+    .track-day-booking-form__input[data-phone-country-code]:focus::placeholder {
+      opacity: 0.55;
     }
 
     .track-day-booking-form__input[aria-invalid='true'] {

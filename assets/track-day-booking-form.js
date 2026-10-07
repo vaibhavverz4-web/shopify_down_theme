@@ -26,15 +26,12 @@ if (!window.trackDayBookingFormLoaded) {
     return date.toISOString().slice(0, 10);
   };
 
-  // A phone field holding only its fixed prefix (e.g. "+65") counts as empty.
-  const isEmpty = (input) => !input.value.trim() || input.value === input.dataset.phonePrefix;
-
   const getFieldError = (input) => {
     const { validity, dataset } = input;
     // A partially typed / impossible date (e.g. a 6-digit year) reports
     // badInput with an empty value, so check it before "required".
     if (validity.badInput) return dataset.invalidMessage;
-    if (isEmpty(input)) return dataset.requiredMessage;
+    if (!input.value.trim()) return dataset.requiredMessage;
     if (validity.rangeUnderflow && dataset.underflowMessage) return dataset.underflowMessage;
     if (validity.rangeOverflow && dataset.overflowMessage) return dataset.overflowMessage;
     if (!input.checkValidity()) return dataset.invalidMessage || dataset.requiredMessage;
@@ -45,67 +42,67 @@ if (!window.trackDayBookingFormLoaded) {
   // a date (a picker choice or typed date is a complete action).
   const shouldValidateInstantly = (input) => input.type === 'date';
 
-  // Last sanitized value of each phone field, used to undo deletes into the prefix.
+  // Phone fields accept a local number (e.g. "81234567") or the same number
+  // with its country code ("+6581234567"). data-phone-country-code and
+  // data-phone-digits set the country code and local number length.
+  const isPhoneField = (input) => input.matches?.(`input[data-phone-country-code]${FIELD_SELECTOR}`);
+
+  const getPhoneFormat = (input) => ({
+    countryCode: input.dataset.phoneCountryCode,
+    digits: Number(input.dataset.phoneDigits),
+  });
+
+  // True while the value can still become a valid number by typing more:
+  // "", "8123", "+", "+6", "+65", "+658123", … but never a 9th local digit,
+  // a non-digit, a "+" that isn't first, or another country's code.
+  const isPhoneInProgress = (input, value) => {
+    const { countryCode, digits } = getPhoneFormat(input);
+    if (!value.startsWith('+')) return new RegExp(`^\\d{0,${digits}}$`).test(value);
+    const typed = value.slice(1);
+    if (!/^\d*$/.test(typed)) return false;
+    if (typed.length <= countryCode.length) return countryCode.startsWith(typed);
+    return typed.startsWith(countryCode) && typed.length <= countryCode.length + digits;
+  };
+
+  // Cleans pasted or autofilled text into "<local digits>" or
+  // "+<country code><local digits>": strips spaces, dashes and brackets,
+  // accepts "0065…" / "65…" as the country code, and caps the local number.
+  // Returns null for another country's number rather than truncating it into
+  // a wrong local one.
+  const normalizePhone = (input, raw) => {
+    const { countryCode, digits: localLength } = getPhoneFormat(input);
+    const trimmed = raw.trim();
+    const allDigits = trimmed.replace(/\D/g, '');
+
+    if (trimmed.startsWith('+')) {
+      if (!allDigits.startsWith(countryCode)) return null;
+      return `+${countryCode}${allDigits.slice(countryCode.length, countryCode.length + localLength)}`;
+    }
+    if (allDigits.length > localLength) {
+      const code = [`00${countryCode}`, countryCode].find((prefix) => allDigits.startsWith(prefix));
+      if (code) return `+${countryCode}${allDigits.slice(code.length, code.length + localLength)}`;
+    }
+    return allDigits.slice(0, localLength);
+  };
+
+  // Last accepted value of each phone field, restored when an edit breaks it.
   const lastPhoneValues = new WeakMap();
 
-  // A number with another country code, e.g. "+971 …" when the prefix is "+65".
-  const isForeignPhone = (input, text) => {
-    const prefix = input.dataset.phonePrefix || '';
-    const trimmed = text.trim();
-    return trimmed.startsWith('+') && !trimmed.startsWith(prefix);
-  };
-
-  // Builds "<prefix><digits>" from raw text: keeps the fixed prefix (e.g. "+65"),
-  // drops non-digits, removes a repeated country code from numbers such as
-  // "+65 8123 4567" or "0065 8123 4567", and caps the local number at
-  // data-phone-digits. Another country's number is dropped rather than being
-  // truncated into a wrong local number.
-  const normalizePhone = (input, raw) => {
-    const prefix = input.dataset.phonePrefix || '';
-    const maxDigits = Number(input.dataset.phoneDigits) || Infinity;
-    const countryCode = prefix.replace(/\D/g, '');
-
-    const rest = raw.startsWith(prefix) ? raw.slice(prefix.length) : raw;
-    if (isForeignPhone(input, rest)) return prefix;
-
-    let digits = rest.replace(/\D/g, '');
-    const repeatedCode = [`00${countryCode}`, countryCode].find(
-      (code) => countryCode && digits.length > maxDigits && digits.startsWith(code)
-    );
-    if (repeatedCode) digits = digits.slice(repeatedCode.length);
-    return prefix + digits.slice(0, maxDigits);
-  };
-
-  // A delete that reached into the prefix (e.g. Backspace right after "+65")
-  // keeps the prefix and only removes the digits that were deleted.
-  const restorePhonePrefix = (input, previous) => {
-    const prefix = input.dataset.phonePrefix || '';
-    const { value } = input;
-    let start = 0;
-    while (start < value.length && value[start] === previous[start]) start++;
-    const end = start + previous.length - value.length;
-    return prefix + previous.slice(Math.max(end, prefix.length));
-  };
-
+  // Fallback for edits `beforeinput` doesn't catch. A delete that breaks the
+  // number (e.g. removing the "6" of "+65…") is undone; autofill or a dropped
+  // value is cleaned up with normalizePhone. Returns false if another
+  // country's number was rejected (the field is then cleared).
   const sanitizePhone = (input, inputType = '') => {
-    const prefix = input.dataset.phonePrefix || '';
-    const previous = lastPhoneValues.get(input);
-    const sanitized =
-      inputType.startsWith('delete') && previous && !input.value.startsWith(prefix)
-        ? restorePhonePrefix(input, previous)
-        : normalizePhone(input, input.value);
-    if (sanitized !== input.value) input.value = sanitized;
-    lastPhoneValues.set(input, sanitized);
+    let accepted = true;
+    if (!isPhoneInProgress(input, input.value)) {
+      const cleansUp = !inputType || inputType === 'insertReplacementText' || inputType === 'insertFromDrop';
+      const replacement = cleansUp ? normalizePhone(input, input.value) : lastPhoneValues.get(input) ?? '';
+      accepted = replacement !== null;
+      input.value = replacement ?? '';
+    }
+    lastPhoneValues.set(input, input.value);
+    return accepted;
   };
-
-  // Keeps the caret (and selection start) after the fixed prefix.
-  const clampPhoneCaret = (input) => {
-    const prefixLength = (input.dataset.phonePrefix || '').length;
-    if (input.selectionStart === null || input.selectionStart >= prefixLength) return;
-    input.setSelectionRange(prefixLength, Math.max(prefixLength, input.selectionEnd));
-  };
-
-  const isPhoneField = (input) => input.matches?.(`input[data-phone-prefix]${FIELD_SELECTOR}`);
 
   // A date input's own value is always yyyy-mm-dd; mirror it into the hidden
   // dd/mm/yyyy field that actually gets submitted as the line item property.
@@ -184,8 +181,10 @@ if (!window.trackDayBookingFormLoaded) {
       if (maxDaysAhead) dateInput.max = isoDateFromToday(maxDaysAhead);
     });
 
-    // Restore the fixed prefix if the browser restored or autofilled a value without it.
-    bookingForm.querySelectorAll('input[data-phone-prefix]').forEach(sanitizePhone);
+    // Clean up a value the browser restored (back/forward cache) or autofilled.
+    bookingForm.querySelectorAll(`input[data-phone-country-code]${FIELD_SELECTOR}`).forEach((input) => {
+      sanitizePhone(input);
+    });
   };
 
   const refreshAll = () => {
@@ -232,12 +231,14 @@ if (!window.trackDayBookingFormLoaded) {
     if (!input.matches?.(FIELD_SELECTOR)) return;
     const bookingForm = input.closest(FORM_SELECTOR);
 
-    if (isPhoneField(input)) sanitizePhone(input, event.inputType);
+    const phoneRejected = isPhoneField(input) && !sanitizePhone(input, event.inputType);
     if (input.type === 'date') syncDateHidden(input);
 
     // Clear an error as soon as the field is fixed; otherwise only flag it
     // mid-typing when it is already definitely wrong.
-    if (input.getAttribute('aria-invalid') === 'true' || shouldValidateInstantly(input)) {
+    if (phoneRejected) {
+      setFieldError(input, input.dataset.invalidMessage);
+    } else if (input.getAttribute('aria-invalid') === 'true' || shouldValidateInstantly(input)) {
       setFieldError(input, getFieldError(input));
     }
     if (isValid(bookingForm)) setSummaryError(bookingForm, false);
@@ -246,35 +247,36 @@ if (!window.trackDayBookingFormLoaded) {
 
   document.addEventListener('focusout', (event) => {
     const input = event.target;
-    if (!input.matches?.(FIELD_SELECTOR) || (isEmpty(input) && !input.validity.badInput)) return;
+    if (!input.matches?.(FIELD_SELECTOR) || (!input.value && !input.validity.badInput)) return;
     setFieldError(input, getFieldError(input));
   });
 
-  // Pasting is handled here because `maxlength` would otherwise cut a pasted
-  // "+65 8123 4567" short before it could be cleaned up.
+  // Block a typed character that can't be part of a valid phone number
+  // (a letter, a 9th digit, a "+" that isn't first, another country code).
+  document.addEventListener('beforeinput', (event) => {
+    const input = event.target;
+    if (!isPhoneField(input) || event.inputType !== 'insertText' || input.selectionStart === null) return;
+    const { value, selectionStart, selectionEnd } = input;
+    const next = value.slice(0, selectionStart) + (event.data || '') + value.slice(selectionEnd);
+    if (!isPhoneInProgress(input, next)) event.preventDefault();
+  });
+
+  // Pasting is handled here so "+65 8123 4567" or "8123-4567" can be cleaned
+  // up instead of being cut short by `maxlength`.
   document.addEventListener('paste', (event) => {
     const input = event.target;
     if (!isPhoneField(input)) return;
     event.preventDefault();
 
     const pasted = event.clipboardData?.getData('text') || '';
-    // Reject another country's number instead of truncating it into a wrong one.
-    if (isForeignPhone(input, pasted)) {
+    const { value, selectionStart, selectionEnd } = input;
+    const normalized = normalizePhone(input, value.slice(0, selectionStart) + pasted + value.slice(selectionEnd));
+    if (normalized === null) {
       setFieldError(input, input.dataset.invalidMessage);
       return;
     }
-
-    clampPhoneCaret(input);
-    const { value, selectionStart, selectionEnd } = input;
-    input.value = normalizePhone(input, value.slice(0, selectionStart) + pasted + value.slice(selectionEnd));
+    input.value = normalized;
     input.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-
-  // Stop the caret from moving into (and editing) the fixed prefix.
-  ['focusin', 'click', 'keyup', 'select'].forEach((type) => {
-    document.addEventListener(type, (event) => {
-      if (isPhoneField(event.target)) clampPhoneCaret(event.target);
-    });
   });
 
   // Date pickers can commit a value via `change` without an `input` event.

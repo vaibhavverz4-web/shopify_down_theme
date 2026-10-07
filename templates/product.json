@@ -131,6 +131,7 @@
         "tab_LmDNyr",
         "tab_kxkPHG"
       ],
+      "disabled": true,
       "name": "Product tabs",
       "settings": {
         "nav_alignment": "center",
@@ -150,54 +151,6 @@
         "padding_top": 64,
         "padding_bottom": 64,
         "aria_label": "Product information"
-      }
-    },
-    "image_with_text_YDURCP": {
-      "type": "image-with-text",
-      "blocks": {
-        "heading_Weyic6": {
-          "type": "heading",
-          "settings": {
-            "heading": "{{ product.metafields.custom.product_feature.value.title.value }}",
-            "heading_size": "h1"
-          }
-        },
-        "text_jh7REy": {
-          "type": "text",
-          "settings": {
-            "text": "<p>{{ product.metafields.custom.product_feature.value.description | metafield_tag }}</p>",
-            "text_style": "body"
-          }
-        },
-        "button_jYqg4W": {
-          "type": "button",
-          "settings": {
-            "button_label": "",
-            "button_link": "",
-            "button_style_secondary": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_Weyic6",
-        "text_jh7REy",
-        "button_jYqg4W"
-      ],
-      "name": "t:sections.image-with-text.presets.name",
-      "settings": {
-        "image": "{{ product.metafields.custom.product_feature.value.image.value }}",
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "image_first",
-        "image_behavior": "none",
-        "content_layout": "no-overlap",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "mobile_content_alignment": "left",
-        "section_color_scheme": "",
-        "color_scheme": "",
-        "padding_top": 36,
-        "padding_bottom": 36
       }
     },
     "17865031324580f9cf": {
@@ -228,7 +181,6 @@
   "order": [
     "main",
     "product_tabs_M7BPVr",
-    "image_with_text_YDURCP",
     "17865031324580f9cf",
     "related-products"
   ]

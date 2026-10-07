@@ -46,7 +46,8 @@
     <div class="track-day-booking-form__field">
       {%- comment -%}
         Any country: digits with an optional leading "+", up to 15 digits
-        (the E.164 maximum), e.g. +6581234567 or 81234567.
+        (the E.164 maximum), e.g. +6581234567 or 81234567. No placeholder:
+        the field starts blank, so Dawn keeps its label in the raised position.
         track-day-booking-form.js blocks anything else as it is typed (letters,
         spaces, symbols, a "+" anywhere but first, a 16th digit) and strips it
         from pasted numbers such as "+65 8123-4567".
@@ -57,7 +58,6 @@
           type="tel"
           id="TrackDayContactNumber-{{ section.id }}"
           name="properties[Contact Number]"
-          placeholder="e.g. +6581234567"
           inputmode="tel"
           autocomplete="tel"
           pattern="\+?[0-9]{1,15}"
@@ -197,12 +197,6 @@
 
     .track-day-booking-form__input {
       width: 100%;
-    }
-
-    /* Dawn hides placeholders behind the floating label; show the phone
-       format example once the label has moved up on focus. */
-    .track-day-booking-form__input[data-phone-max-digits]:focus::placeholder {
-      opacity: 0.55;
     }
 
     .track-day-booking-form__input[aria-invalid='true'] {

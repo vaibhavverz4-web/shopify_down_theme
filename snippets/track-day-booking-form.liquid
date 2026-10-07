@@ -47,9 +47,10 @@
       {%- comment -%}
         Singapore numbers only: 8 digits starting with 3, 6, 8 or 9, with or
         without the "+65" country code (e.g. 81234567 or +6581234567).
-        track-day-booking-form.js blocks letters, a "+" anywhere but first,
-        other country codes and digits beyond the limit, and cleans up
-        pasted numbers such as "+65 8123 4567".
+        Only digits and a leading "+" are allowed. track-day-booking-form.js
+        blocks anything else as it is typed (letters, spaces, dashes, a "+"
+        anywhere but first, other country codes, digits beyond the limit) and
+        strips it from pasted numbers such as "+65 8123 4567".
       {%- endcomment -%}
       <div class="field">
         <input
@@ -57,12 +58,12 @@
           type="tel"
           id="TrackDayContactNumber-{{ section.id }}"
           name="properties[Contact Number]"
-          placeholder="e.g. 81234567 or +65 81234567"
+          placeholder="e.g. 81234567 or +6581234567"
           inputmode="tel"
           autocomplete="tel-national"
           pattern="(\+65)?[3689][0-9]{7}"
           minlength="8"
-          maxlength="12"
+          maxlength="11"
           required
           aria-required="true"
           aria-describedby="TrackDayContactNumber-{{ section.id }}-error"

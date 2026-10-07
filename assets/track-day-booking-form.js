@@ -42,66 +42,31 @@ if (!window.trackDayBookingFormLoaded) {
   // a date (a picker choice or typed date is a complete action).
   const shouldValidateInstantly = (input) => input.type === 'date';
 
-  // Phone fields accept a local number (e.g. "81234567") or the same number
-  // with its country code ("+6581234567"). data-phone-country-code and
-  // data-phone-digits set the country code and local number length.
-  const isPhoneField = (input) => input.matches?.(`input[data-phone-country-code]${FIELD_SELECTOR}`);
+  // Phone fields accept digits with an optional leading "+" (any country
+  // code), up to data-phone-max-digits digits (15, the E.164 maximum).
+  const isPhoneField = (input) => input.matches?.(`input[data-phone-max-digits]${FIELD_SELECTOR}`);
 
-  const getPhoneFormat = (input) => ({
-    countryCode: input.dataset.phoneCountryCode,
-    digits: Number(input.dataset.phoneDigits),
-  });
+  const getPhoneMaxDigits = (input) => Number(input.dataset.phoneMaxDigits) || 15;
 
-  // True while the value can still become a valid number by typing more:
-  // "", "8123", "+", "+6", "+65", "+658123", … but never a 9th local digit,
-  // a non-digit, a "+" that isn't first, or another country's code.
-  const isPhoneInProgress = (input, value) => {
-    const { countryCode, digits } = getPhoneFormat(input);
-    if (!value.startsWith('+')) return new RegExp(`^\\d{0,${digits}}$`).test(value);
-    const typed = value.slice(1);
-    if (!/^\d*$/.test(typed)) return false;
-    if (typed.length <= countryCode.length) return countryCode.startsWith(typed);
-    return typed.startsWith(countryCode) && typed.length <= countryCode.length + digits;
-  };
+  // True when the value only has digits, a "+" (if any) in first position,
+  // and no more than the maximum number of digits.
+  const isAllowedPhone = (input, value) =>
+    new RegExp(`^\\+?\\d{0,${getPhoneMaxDigits(input)}}$`).test(value);
 
-  // Cleans pasted or autofilled text into "<local digits>" or
-  // "+<country code><local digits>": strips spaces, dashes and brackets,
-  // accepts "0065…" / "65…" as the country code, and caps the local number.
-  // Returns null for another country's number rather than truncating it into
-  // a wrong local one.
+  // Strips everything but digits, keeps a "+" only if the text starts with
+  // one (e.g. pasted "+971 (50) 123-4567" becomes "+971501234567"), and caps
+  // the number at the maximum number of digits.
   const normalizePhone = (input, raw) => {
-    const { countryCode, digits: localLength } = getPhoneFormat(input);
-    const trimmed = raw.trim();
-    const allDigits = trimmed.replace(/\D/g, '');
-
-    if (trimmed.startsWith('+')) {
-      if (!allDigits.startsWith(countryCode)) return null;
-      return `+${countryCode}${allDigits.slice(countryCode.length, countryCode.length + localLength)}`;
-    }
-    if (allDigits.length > localLength) {
-      const code = [`00${countryCode}`, countryCode].find((prefix) => allDigits.startsWith(prefix));
-      if (code) return `+${countryCode}${allDigits.slice(code.length, code.length + localLength)}`;
-    }
-    return allDigits.slice(0, localLength);
+    const hasLeadingPlus = raw.trim().startsWith('+');
+    const digits = raw.replace(/\D/g, '').slice(0, getPhoneMaxDigits(input));
+    return (hasLeadingPlus ? '+' : '') + digits;
   };
 
-  // Last accepted value of each phone field, restored when an edit breaks it.
-  const lastPhoneValues = new WeakMap();
-
-  // Fallback for edits `beforeinput` doesn't catch. A delete that breaks the
-  // number (e.g. removing the "6" of "+65…") is undone; autofill or a dropped
-  // value is cleaned up with normalizePhone. Returns false if another
-  // country's number was rejected (the field is then cleared).
-  const sanitizePhone = (input, inputType = '') => {
-    let accepted = true;
-    if (!isPhoneInProgress(input, input.value)) {
-      const cleansUp = !inputType || inputType === 'insertReplacementText' || inputType === 'insertFromDrop';
-      const replacement = cleansUp ? normalizePhone(input, input.value) : lastPhoneValues.get(input) ?? '';
-      accepted = replacement !== null;
-      input.value = replacement ?? '';
-    }
-    lastPhoneValues.set(input, input.value);
-    return accepted;
+  // Fallback for edits `beforeinput` doesn't block (autofill, drag and drop,
+  // some mobile keyboards): strips any invalid characters straight away.
+  const sanitizePhone = (input) => {
+    if (isAllowedPhone(input, input.value)) return;
+    input.value = normalizePhone(input, input.value);
   };
 
   // A date input's own value is always yyyy-mm-dd; mirror it into the hidden
@@ -182,9 +147,7 @@ if (!window.trackDayBookingFormLoaded) {
     });
 
     // Clean up a value the browser restored (back/forward cache) or autofilled.
-    bookingForm.querySelectorAll(`input[data-phone-country-code]${FIELD_SELECTOR}`).forEach((input) => {
-      sanitizePhone(input);
-    });
+    bookingForm.querySelectorAll(`input[data-phone-max-digits]${FIELD_SELECTOR}`).forEach(sanitizePhone);
   };
 
   const refreshAll = () => {
@@ -231,14 +194,12 @@ if (!window.trackDayBookingFormLoaded) {
     if (!input.matches?.(FIELD_SELECTOR)) return;
     const bookingForm = input.closest(FORM_SELECTOR);
 
-    const phoneRejected = isPhoneField(input) && !sanitizePhone(input, event.inputType);
+    if (isPhoneField(input)) sanitizePhone(input);
     if (input.type === 'date') syncDateHidden(input);
 
     // Clear an error as soon as the field is fixed; otherwise only flag it
     // mid-typing when it is already definitely wrong.
-    if (phoneRejected) {
-      setFieldError(input, input.dataset.invalidMessage);
-    } else if (input.getAttribute('aria-invalid') === 'true' || shouldValidateInstantly(input)) {
+    if (input.getAttribute('aria-invalid') === 'true' || shouldValidateInstantly(input)) {
       setFieldError(input, getFieldError(input));
     }
     if (isValid(bookingForm)) setSummaryError(bookingForm, false);
@@ -251,18 +212,18 @@ if (!window.trackDayBookingFormLoaded) {
     setFieldError(input, getFieldError(input));
   });
 
-  // Block a typed character that can't be part of a valid phone number
-  // (a letter, a 9th digit, a "+" that isn't first, another country code).
+  // Block a typed character that can't be part of a phone number: a letter,
+  // space or symbol, a "+" anywhere but first, or a digit past the maximum.
   document.addEventListener('beforeinput', (event) => {
     const input = event.target;
     if (!isPhoneField(input) || event.inputType !== 'insertText' || input.selectionStart === null) return;
     const { value, selectionStart, selectionEnd } = input;
     const next = value.slice(0, selectionStart) + (event.data || '') + value.slice(selectionEnd);
-    if (!isPhoneInProgress(input, next)) event.preventDefault();
+    if (!isAllowedPhone(input, next)) event.preventDefault();
   });
 
-  // Pasting is handled here so "+65 8123 4567" or "8123-4567" can be cleaned
-  // up instead of being cut short by `maxlength`.
+  // Pasting is handled here so "+971 (50) 123-4567" is cleaned up instead of
+  // being cut short by `maxlength` before its spaces and symbols are removed.
   document.addEventListener('paste', (event) => {
     const input = event.target;
     if (!isPhoneField(input)) return;
@@ -270,12 +231,9 @@ if (!window.trackDayBookingFormLoaded) {
 
     const pasted = event.clipboardData?.getData('text') || '';
     const { value, selectionStart, selectionEnd } = input;
-    const normalized = normalizePhone(input, value.slice(0, selectionStart) + pasted + value.slice(selectionEnd));
-    if (normalized === null) {
-      setFieldError(input, input.dataset.invalidMessage);
-      return;
-    }
-    input.value = normalized;
+    const before = value.slice(0, selectionStart);
+    // Pasted text only keeps its "+" when it lands at the very start.
+    input.value = normalizePhone(input, before + (before ? pasted.replace(/\+/g, '') : pasted) + value.slice(selectionEnd));
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
 

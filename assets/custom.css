@@ -1847,9 +1847,9 @@ a.tmarquee__text:focus-visible {
   border-color: var(--tdbf-error);
 }
 
-/* Drop Dawn's boxed border and shadow drawn on .field */
-.track-day-booking-form .field::before,
-.track-day-booking-form .field::after {
+/* Drop Dawn's boxed shadow drawn on .field::before. Its ::after (the boxed
+   border) is reused below as the animated focus underline. */
+.track-day-booking-form .field::before {
   display: none;
 }
 
@@ -1900,12 +1900,40 @@ a.tmarquee__text:focus-visible {
   color: #80868b;
 }
 
-/* 2px underline on focus: 1px border + 1px inset shadow, so nothing shifts. */
 .track-day-booking-form .field .field__input:focus,
 .track-day-booking-form .field .field__input:focus-visible {
-  border-bottom-color: var(--tdbf-accent);
-  box-shadow: inset 0 -1px 0 var(--tdbf-accent);
+  box-shadow: none;
   outline: none;
+}
+
+/* ---------- Focus underline animation ---------- */
+
+/* A 2px accent line over the grey underline at the bottom of .field (the
+   input is its last visible child). It grows from the left on focus and
+   shrinks back on blur. The :hover selector beats Dawn's
+   `.field:hover.field:after` box-shadow. */
+.track-day-booking-form .field::after,
+.track-day-booking-form .field:hover::after {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--tdbf-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.track-day-booking-form .field:focus-within::after {
+  transform: scaleX(1);
+}
+
+.track-day-booking-form .field:has([aria-invalid='true'])::after {
+  background: var(--tdbf-error);
 }
 
 /* Replaces the snippet's boxed invalid outline with a red underline. */
@@ -1922,7 +1950,9 @@ a.tmarquee__text:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .track-day-booking-form__field,
-  .track-day-booking-form .field .field__input {
+  .track-day-booking-form .field .field__input,
+  .track-day-booking-form .field::after,
+  .track-day-booking-form .field:hover::after {
     transition: none;
   }
 }
